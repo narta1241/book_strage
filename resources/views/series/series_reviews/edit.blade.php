@@ -18,17 +18,18 @@
                             </div>
                             <div class="form-group">
                                 <label for="comment" class="col-form-label text-md-right">{{ __('コメント') }}</label>
-                                <textarea id="text" class="form-control @error('name') is-invalid @enderror" name="comment"><?= $book['comment']; ?></textarea>
-                                @error('text')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <textarea id="comment" class="form-control" name="comment"><?= $book['comment']; ?></textarea>
+                                @if ($errors->first('comment')) 
+                                    <p class="validation text-danger">※{{$errors->first('comment')}}</p>
+                                @endif
                             </div>
                             <div class="form-group">
-                                <label for="star" class="col-form-label text-md-right">評価(５点満点の整数)</label>
+                                <label for="star" class="col-form-label text-md-right">評価(５点満点)</label>
                                 <input type="number" name="star" id="star" class="form-control" min="1" max="5" value="<?= $book['star']; ?>">
                             </div>
+                                @if ($errors->first('star')) 
+                                    <p class="validation text-danger">※{{$errors->first('star')}}</p>
+                                @endif
                         </div>
 
                         <div class="form-group row mb-0">
@@ -39,7 +40,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="{{ URL::previous() }}">戻る</a>
+                    <a href={{ route('series.series_reviews.index', $book->series_id) }}> レビュー一覧へ </a>
                 </div>
             </div>
         </div>

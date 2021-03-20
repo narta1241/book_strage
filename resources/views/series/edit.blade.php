@@ -16,6 +16,9 @@
                             <div class="form-group">
                                 <label for="title" class="col-form-label text-md-right">{{ __('書籍名') }}</label>
                                 <input type="text" id="title" name="title" class="form-control" value={{ $series->title }}>
+                                @if ($errors->first('title')) 
+                                    <p class="validation text-danger">※{{$errors->first('title')}}</p>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="author" class="col-form-label text-md-right">{{ __('著者名') }}</label>
@@ -26,8 +29,11 @@
                                 <input type="text" id="publisher" name="publisher" class="form-control" value={{ $series->publisher }}>
                             </div>
                             <div class="form-group">
-                                <label for="current_volume" class="col-form-label text-md-right">{{ __('最新刊') }}</label>
+                                <label for="current_volume" class="col-form-label text-md-right">{{ __('最新巻') }}</label>
                                 <input type="number" id="current_volume" name="current_volume" class="form-control" value={{ $series->current_volume }}>
+                                @if ($errors->first('current_volume')) 
+                                    <p class="validation text-danger">※{{$errors->first('current_volume')}}</p>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="final_flg" class="col-form-label text-md-right">{{ __('刊行状況') }}</label>
@@ -50,7 +56,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="{{ URL::previous() }}">戻る</a>
+                    <a href={{ route('series.index') }}> 戻る </a>
                 </div>
             </div>
         </div>

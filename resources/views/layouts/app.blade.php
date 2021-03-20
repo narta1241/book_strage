@@ -10,6 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -72,9 +73,17 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4">        
+            <!-- フラッシュメッセージ -->
+            @if (session('flash_message'))
+                <div class="flash_message">
+                    {{ session('flash_message') }}
+                </div>
+            @endif
+            
             @yield('content')
         </main>
     </div>
+    @yield('javascript')
 </body>
 </html>

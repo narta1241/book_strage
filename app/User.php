@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -36,4 +37,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function user_series()
+    {
+        return $this->hasOne('App\UserSeries');
+    }
+    public function sumVolume()
+    {
+        $sum = $this->user_series()->where('user_id', Auth::id())->sum('volume');
+        
+        // dd($sum);
+        return $sum;
+    }
 }

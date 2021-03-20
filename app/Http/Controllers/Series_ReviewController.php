@@ -14,11 +14,13 @@ class Series_ReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Series $series)
     {
-        $reviews = Series_Review::all();
-    //   dd($reviews);
-        return view('/series/series_reviews.index', compact('reviews'));
+        // dump($series);
+        $reviews = Series_Review::where('series_id', $series->id)->get();
+        $series = Series::where('id', $series->id)->first();
+        // dd($reviews);
+        return view('/series/series_reviews.index', compact('reviews','series'));
     }
 
     /**
@@ -27,26 +29,35 @@ class Series_ReviewController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-    public function create(Request $request)
+    public function create(Series $series)
     {
         // dump($request);
-        $title = Series::where('id',$request->series)->value('title');
-        $id = $request->series;
-        // dd($id);
-        return view('/series/series_reviews.create',compact('title', 'id'));
+        $title = $series->title;
+        $id = $series->id;
+        // dump($id);
+        // $result = Series_Review::where('series_id', $id)->where('user_id', Auth::id())->first();
+        // $validator = $request->validate([ 
+        //     'series_id' => "exists:$result",
+        // ]);
+        // dd($validator);
+        return view('/series/series_reviews.create', compact('title', 'id'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Series  $series
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Series $series, Request $request)
     {
+        $validator = $request->validate([ 
+            'comment' => 'required',
+            'star' => 'required',
+        ]);
         Series_Review::create([
-            'user_id' => $request->input('user_id'),
-            'series_id' => $request->input('series_id'),
+            'user_id' => Auth::id(),
+            'series_id' => $series->id,
             'comment' => $request->input('comment'),
             'star' => $request->input('star')
         ]);
@@ -71,10 +82,16 @@ class Series_ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($series)
     {
-        $book = Series_Review::where('series_id',$id)->where('user_id',Auth::id())->first();
-        // dd($book);
+        // dump($id);
+        $book = Series_Review::where('series_id', $series)->where('user_id', Auth::id())->first();
+        if (!$book) {
+            session()->flash('flash_message', '登録ユーザーではないので編集できません。');
+            return redirect()->route('series.series_reviews.index', ['series' => $series]);
+        }
+        
+        
         return view('/series/series_reviews.edit', compact('book'));
     }
 
@@ -85,13 +102,15 @@ class Series_ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update($series, Request $request)
     {
-        $review = Series_Review::where('series_id',$request->input('series_id'))->where('user_id',Auth::id())->first();
+        $validator = $request->validate([ 
+            'comment' => 'required',
+            'star' => 'required',
+        ]);
+        $review = Series_Review::where('series_id', $series)->where('user_id', Auth::id())->first();
         // dd($review);
         
-        $review->user_id = $request->input('user_id');
-        $review->series_id = $request->input('series_id');
         $review->comment = $request->input('comment');
         $review->star = $request->input('star');
         $review->save();
@@ -104,9 +123,9 @@ class Series_ReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($series)
     {
-        $result = Series_Review::where('series_id', $id)->where('user_id',Auth::id())->first();
+        $result = Series_Review::where('series_id', $series)->where('user_id',Auth::id())->first();
         $result->delete();
         
         return redirect()->route('series.index');

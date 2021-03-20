@@ -8,26 +8,22 @@
                 <div class="card-header">{{ __($title.' レビュー登録') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('series_reviews.store') }}">
+                    <form method="POST" action="{{ route('series.series_reviews.store', ['series' => $id]) }}">
                         @csrf
-                            <input type="hidden" name="user_id" value="{{ Auth::id() }}" />
                         <div class="form-group row">
                             <div class="form-group">
-                                <!--<label for="title" class="col-form-label text-md-right">{{ $title }}</label><br>-->
-                                <input type="hidden" id="series_id" name="series_id" class="form-control" value={{ $id }}>
-                            </div>
-                            <div class="form-group">
                                 <label for="comment" class="col-form-label text-md-right">{{ __('コメント') }}</label>
-                                <textarea id="text" class="form-control @error('name') is-invalid @enderror" name="comment">{{ old('name') }}</textarea>
-                                @error('text')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <textarea id="comment" class="form-control" name="comment"></textarea>
+                                @if ($errors->first('comment')) 
+                                    <p class="validation text-danger">※{{$errors->first('comment')}}</p>
+                                @endif
                             </div>
                             <div class="form-group">
-                                <label for="star" class="col-form-label text-md-right">評価(５点満点の整数)</label>
+                                <label for="star" class="col-form-label text-md-right">評価(５点満点)</label>
                                 <input type="number" name="star" id="star" class="form-control" min="1" max="5">
+                                @if ($errors->first('star')) 
+                                    <p class="validation text-danger">※{{$errors->first('star')}}</p>
+                                @endif
                             </div>
                         </div>
 
@@ -39,7 +35,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="{{ URL::previous() }}">戻る</a>
+                    <a href={{ route('series.series_reviews.index', $id) }}> レビュー一覧へ </a>
                 </div>
             </div>
         </div>

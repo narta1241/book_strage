@@ -22,13 +22,23 @@ class Series_Review extends Model
     {
         return $this->belongsTo('App\Series');
     }
-    
-    public function seriesTitle($seriesId)
+    public function user()
     {
-        // dump($seriesId);
-        $title = $this->series()->where('id',$seriesId)->value('title');
-        
-        // dd($title);
-        return $title;
+        return $this->belongsTo('App\User');
     }
+    public function userName($userId)
+    {
+        $name = $this->user()->where('id', $userId)->value('name');
+        return $name;
+    }
+   
+    
+    // public function seriesTitle($seriesId)
+    // {
+    //     // dump($seriesId);
+    //     $title = $this->series()->where('id',$seriesId)->value('title');
+        
+    //     // dd($title);
+    //     return $title;
+    // }
 }

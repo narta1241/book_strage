@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
 
 class Series extends Model
 {
@@ -33,14 +35,34 @@ class Series extends Model
         
         return $status;
     }
-    
-    public function book()
-    {
-        return $this->hasMany('App\Book');
-    }
    
    public function favorite_series()
     {
+        // dd($this->hasMany('App\Favorite_Series'));
         return $this->hasMany('App\Favorite_Series');
     }
+   public function user_series()
+    {
+        return $this->hasMany('App\UserSeries');
+    }
+    public function series_reviews()
+    {
+        return $this->hasMany('App\Series_Review');
+    }
+    
+    
+   public function checkuser($series)
+    {
+        $user = $this->user_series()->where('user_id', Auth::id())->where('series_id', $series)->first();
+        
+        return $user;
+    }
+    public function reviewsearch($series)
+    {
+        $review = $this->series_reviews()->where('user_id', Auth::id())->where('series_id', $series)->first();
+        
+        return $review;
+    }
+    
+    
 }

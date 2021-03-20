@@ -36,17 +36,20 @@ class FavoriteSeriesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
-        // いいねを取得する
+        // dump($request);
+        // お気に入りを取得する
         $favorite = Favorite_Series::where('user_id', Auth::id())
             ->where('series_id', $request->input('series_id'))
             ->first();
             // dd($favorite);
-        // 既にいいねされている場合
+        // 既にお気に入りされている場合
         if ($favorite)  {
             $favorite->delete();
-         
-        // いいねされていない場合
+        
+            return response()->json([
+                'result' => 'deleted'
+            ]);
+        // お気に入りされていない場合
             
         } else {
             
@@ -54,8 +57,12 @@ class FavoriteSeriesController extends Controller
                 'series_id' => $request->input('series_id'),
                 'user_id' => Auth::id(),
             ]);
+            
+             return response()->json([
+                'result' => 'created'
+            ]);
         }
-        return redirect()->route('series.index');
+        // return redirect()->route('series.index');
     }
 
     /**

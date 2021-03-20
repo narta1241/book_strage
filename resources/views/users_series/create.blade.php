@@ -5,18 +5,18 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __($book->series->title) }}</div>
+                <div class="card-header">{{ __('巻数登録') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/books/{{ $book->id }}">
+                    <form method="POST" action="{{ route('series.user_series.store', ['series' => $series->id]) }}">
                         @csrf
-                        @method('PUT')
-                        <input type="hidden" name="user_id" value="{{ Auth::id() }}" />
-                        <input type="hidden" name="series_id" value="{{ $book->series->id }}">
                         <div class="form-group row">
                             <div class="form-group">
-                                <label for="volume" class="col-form-label text-md-right">{{ __('巻数') }}</label>
-                                <input type="number" id="volume" name="volume" min="0" max="{{ $book->series->current_volume }} "class="form-control" value={{ $book->volume }}>
+                                <label for="current_volume" class="col-form-label text-md-right">{{ __('所持巻') }}</label>
+                                <input type="number" id="volume" name="volume" class="form-control" min=1>
+                                @if ($errors->first('volume')) 
+                                    <p class="validation text-danger">※{{$errors->first('volume')}}</p>
+                                @endif
                             </div>
                         </div>
 
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="{{ URL::previous() }}">戻る</a>
+                     <a href={{ route('series.index') }}> 戻る </a>
                 </div>
             </div>
         </div>

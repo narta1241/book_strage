@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Series;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,9 +17,10 @@ class SeriesController extends Controller
      */
     public function index()
     {
-        $series =Series::all(); 
-        
-        return view('series.index', compact('series'));
+        $serieslist =Series::all();
+        $user = User::where('id', Auth::id())->first();
+        // dd($user);
+        return view('series.index', compact('serieslist', 'user'));
     }
 
     /**
@@ -39,6 +41,10 @@ class SeriesController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = $request->validate([       // <-- ここがバリデーション部分
+            'title' => 'required',
+            'current_volume' => 'required',
+        ]);
         Series::create([
             'user_id' => $request->input('user_id'),
             'title' => $request->input('title'),
@@ -82,6 +88,10 @@ class SeriesController extends Controller
      */
     public function update(Request $request, Series $series)
     {
+        $validator = $request->validate([       // <-- ここがバリデーション部分
+            'title' => 'required',
+            'current_volume' => 'required',
+        ]);
         $series->title = $request->input('title');
         $series->author = $request->input('author');
         $series->publisher = $request->input('publisher');
@@ -101,6 +111,7 @@ class SeriesController extends Controller
     public function destroy(Series $series)
     {
         $series->delete();
+        
         return redirect()->route('series.index');
     }
 }
