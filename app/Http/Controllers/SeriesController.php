@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Series;
 use App\User;
+use App\BookSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,10 +18,17 @@ class SeriesController extends Controller
      */
     public function index()
     {
-        $serieslist =Series::all();
         $user = User::where('id', Auth::id())->first();
         // dd($user);
+        if (!empty($_GET['search'])){
+            $serieslist = Series::where('title', 'like', "%{$_GET['search']}%")->orderBy('created_at','desc')->paginate(10);
+        }else{
+            $serieslist = Series::orderBy('created_at','desc')->paginate(10);
+        }
+        // $posts = Series::paginate(10);
+        // dd($posts);
         return view('series.index', compact('serieslist', 'user'));
+        // return view('series.index', ['search'=>$search], compact('serieslist', 'user', 'search'));
     }
 
     /**
@@ -28,9 +36,11 @@ class SeriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('series.create');
+        $series = BookSearch::bookSearch($id);
+        // dd($series);
+        return view('series.create', compact('series'));
     }
 
     /**
@@ -41,15 +51,30 @@ class SeriesController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
+        //タイトルの中にある巻数の削除
+        $title = $request->input('title');
+        $cut = 0;
+        if(strpos($title, '（')){
+            $cut = mb_strlen($title) - mb_strpos($title, '（');
+        }else{
+            $cut = 1;   
+        }
+        // dump($cut);
+        $title = mb_substr( $title, 0 , mb_strlen($title)-$cut);
+        
         $validator = $request->validate([       // <-- ここがバリデーション部分
-            'title' => 'required',
+            'title' => "required|unique:series,title,$request->title",
             'current_volume' => 'required',
         ]);
+        // dump($request->input('title'));
+        // dd($title);
         Series::create([
-            'user_id' => $request->input('user_id'),
-            'title' => $request->input('title'),
+            'user_id' => Auth::id(),
+            'title' => $title,
             'author' => $request->input('author'),
             'publisher' => $request->input('publisher'),
+            'image' => $request->input('image'),
             'current_volume' => $request->input('current_volume'),
             'final_flg' => $request->input('final_flg')
         ]);
@@ -63,9 +88,9 @@ class SeriesController extends Controller
      * @param  \App\Series  $series
      * @return \Illuminate\Http\Response
      */
-    public function show(Series $series)
+    public function show(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**
@@ -95,6 +120,7 @@ class SeriesController extends Controller
         $series->title = $request->input('title');
         $series->author = $request->input('author');
         $series->publisher = $request->input('publisher');
+        $series->image = $request->input('image');
         $series->current_volume = $request->input('current_volume');
         $series->final_flg = $request->input('final_flg');
         $series->save();
@@ -114,4 +140,6 @@ class SeriesController extends Controller
         
         return redirect()->route('series.index');
     }
+    
+    
 }

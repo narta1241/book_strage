@@ -8,28 +8,28 @@
                 <div class="card-header">{{ __($book->series->title) }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/series_reviews/{{ $book->series_id }}">
+                    <form method="POST" action="{{ route('series.series_reviews.update', ['series' => $book->series_id]) }}">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="user_id" value="{{ Auth::id() }}" />
-                        <div class="form-group row">
+                        <div class="form-group">
                             <div class="form-group">
                                 <input type="hidden" name="series_id" value="{{ $book->series_id }}">
                             </div>
                             <div class="form-group">
                                 <label for="comment" class="col-form-label text-md-right">{{ __('コメント') }}</label>
-                                <textarea id="comment" class="form-control" name="comment"><?= $book['comment']; ?></textarea>
+                                <textarea id="comment" class="form-control" name="comment" rows="5"><?= $book['comment']; ?></textarea>
                                 @if ($errors->first('comment')) 
                                     <p class="validation text-danger">※{{$errors->first('comment')}}</p>
                                 @endif
                             </div>
-                            <div class="form-group">
-                                <label for="star" class="col-form-label text-md-right">評価(５点満点)</label>
-                                <input type="number" name="star" id="star" class="form-control" min="1" max="5" value="<?= $book['star']; ?>">
-                            </div>
-                                @if ($errors->first('star')) 
+                            <div>
+                                {{ Form::label('star', '評価') }}
+                                {{ Form::select('star', $book->star_list(), old('star', $book->star), ['class' => 'form-control',  "selected" => old('star', $book->star) ? "selected" : "" ]) }}
+                                @if ($errors->first('star'))
                                     <p class="validation text-danger">※{{$errors->first('star')}}</p>
                                 @endif
+                            </div>
                         </div>
 
                         <div class="form-group row mb-0">

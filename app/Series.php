@@ -2,8 +2,10 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use RakutenRws_Client;
 
 
 class Series extends Model
@@ -11,7 +13,7 @@ class Series extends Model
     const STATUS_FINAL = "完結";
     const STATUS_CONTINUE = "続刊";
     
-    protected $fillable = ['user_id', 'title', 'author', 'publisher', 'current_volume', 'final_flg'];
+    protected $fillable = ['user_id', 'title', 'image', 'author', 'publisher', 'current_volume', 'final_flg'];
     
     public static function status_list()
     {
@@ -63,6 +65,5 @@ class Series extends Model
         
         return $review;
     }
-    
-    
-}
+}   
+

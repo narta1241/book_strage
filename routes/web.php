@@ -25,13 +25,20 @@ Route::put('series/{series}/series_reviews/update', 'Series_ReviewController@upd
 Route::delete('series/{series}/series_reviews/destroy', 'Series_ReviewController@destroy')->name('series.series_reviews.destroy')->middleware('auth');
 Route::resource('favorite_series', 'FavoriteSeriesController')->middleware('auth');
 Route::resource('series', 'SeriesController');
+Route::get('user', 'UserController@index')->name('user.index')->middleware('auth');
+Route::get('bookSearch', 'BookSearchController@search')->name('bookSearch.search');
+Route::get('bookSearch/{keyword}', 'BookSearchController@index')->name('bookSearch.index');
+Route::get('series/create/{id}', 'SeriesController@create')->name('series.create')->middleware('auth');
+Route::get('/series/{keyword?}', 'SeriesController@index')->name('series.index');
+// Route::get('/', 'CalendarController@show');
+
 // Route::resource('user_series', 'UserSeriesController')->middleware('auth');
 // Route::get('series/{series}/favorite_series/store', 'FavoriteSeriesController@store')->name('series.favorite_series.store')->middleware('auth');
 
 Route::get('/', function () {
-    $serieslist =App\Series::all(); 
+    $serieslist = App\Series::orderBy('created_at','desc')->paginate(10);
      $user = App\User::where('id', Auth::id())->first();
-    return view('series.index', compact('serieslist', 'user'));
+    return view('series.index', compact('serieslist', 'user',));
 });
 
 Auth::routes();

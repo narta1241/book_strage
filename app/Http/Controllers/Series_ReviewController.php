@@ -31,16 +31,23 @@ class Series_ReviewController extends Controller
     
     public function create(Series $series)
     {
-        // dump($request);
+        // dump($series);
         $title = $series->title;
         $id = $series->id;
         // dump($id);
-        // $result = Series_Review::where('series_id', $id)->where('user_id', Auth::id())->first();
+        // $review = Series_Review::where('series_id', $id)->first();
         // $validator = $request->validate([ 
         //     'series_id' => "exists:$result",
         // ]);
-        // dd($validator);
-        return view('/series/series_reviews.create', compact('title', 'id'));
+        // dd($review);
+         $stars = array(
+        '1' => '⭐️',
+        '2' => '⭐️⭐️',
+        '3' => '⭐️⭐️⭐️',
+        '4' => '⭐️⭐️⭐️⭐️',
+        '5' => '⭐️⭐️⭐️⭐️⭐️',
+        );
+        return view('/series/series_reviews.create', compact('title', 'id', 'stars'));
     }
 
     /**
@@ -51,10 +58,12 @@ class Series_ReviewController extends Controller
      */
     public function store(Series $series, Request $request)
     {
+        // dump($request);
         $validator = $request->validate([ 
             'comment' => 'required',
             'star' => 'required',
         ]);
+        // dd($series);
         Series_Review::create([
             'user_id' => Auth::id(),
             'series_id' => $series->id,
@@ -115,7 +124,7 @@ class Series_ReviewController extends Controller
         $review->star = $request->input('star');
         $review->save();
         
-        return redirect()->route('series_reviews.index');
+        return redirect()->route('series.series_reviews.index',['series' => $series]);
     }
     /**
      * Remove the specified resource from storage.

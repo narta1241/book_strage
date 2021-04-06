@@ -70,3 +70,18 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+# BookStorage
+- 課題
+  - 楽天書籍APIを使ってみる
+    - 画像URLのカラムを追加
+    - シリーズ登録/編集時にAPIを実行する（タイトル検索）
+    - レスポンスがあればシリーズ登録する （タイトル/著者名/出版社名/画像URL）
+    - APIレスポンスがないタイトル名は登録不可にする（エラーにする）
+    - タイトルが同じデータがあれば登録不可（エラーにする）
+  - 検索機能（曖昧検索）
+    - TOPページ（シリーズ一覧）で検索フォームを用意する
+    - GETパラメータ（URLの後ろにつける）でキーワード（タイトル名）を取得する
+  - カレンダー機能
+    - 楽天書籍APIを使って現在日時から未来１ヶ月分の発売日検索をする

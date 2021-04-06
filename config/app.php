@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'BookStorage'),
 
     /*
     |--------------------------------------------------------------------------
@@ -227,5 +227,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+    
+    'rakuten_id' => env('RAKUTEN_APPLICATION_ID', false),
+    'rakuten_key' => env('RAKUTEN_APPLICATION_SEACRET', false),
 
 ];

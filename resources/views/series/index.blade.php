@@ -1,44 +1,71 @@
 @extends('layouts.app')
 
 @section('content')
-<a href={{ route('series.create') }}> 作品登録 </a>
-@if( $user )
-    <div class = "text-right">所持巻数合計：{{ $user->sumVolume() }}</div>
-@else
-    <td>    </td>
-@endif
+<form action={{ route('bookSearch.search') }} method="POST">
+    <div class="input-group row mb-4 ml-4">
+        @csrf
+        @method('GET')
+        <div class="col-md-2">
+            <input type="text" name="keyword" class="form-control" placeholder="作品名を入力">
+        </div>
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-outline-dark">新規作品検索</button>
+        </span>
+    </div>
+</form>
+
+<form action={{ route('series.index') }} method="GET">
+    <div class="input-group row justify-content-center mb-4">
+        <!--@method('GET')-->
+        @csrf
+        <input type="text" name="search" class="col-md-2 form-control" placeholder="作品名を入力"/>
+        <span class="input-group-btn ml-2">
+            <button type="submit" class='btn btn-outline-dark'>検索</button>
+        </span>
+    </div>
+</form>
+
 <div class = "text-center">
-    
-    <table class="table table-dark">
-        <tr>
-            <td>作品名</td>
-            <td>作者</td>
-            <td>出版社</td>
-            <td>最新巻</td>
-            <td>所持巻</td>
-            <td>巻数編集</td>
-            <td>刊行状況</td>
-            <td>登録日時</td>
-            <td>更新日時</td>
-            <td>編集</td>
-            <td>レビュー一覧</td>
-            <td>レビュー登録/編集</td>
-            <td>お気に入り</td>
-            <td>削除</td>
-        </tr>
+    <table class="table table-responsive-sm table-hover">
+        <thead class="table-info">
+            <tr>
+                <th scope="col">作品名</th>
+                <th scope="col">画像</th>
+                <th scope="col">作者</th>
+                <th scope="col">出版社</th>
+                <th scope="col">最新巻</th>
+                <th scope="col">所持巻</th>
+                <th scope="col">巻数編集</th>
+                <th scope="col">刊行状況</th>
+                <th scope="col">登録日時</th>
+                <th scope="col">更新日時</th>
+                <th scope="col">編集</th>
+                <th scope="col">レビュー一覧</th>
+                <th scope="col">レビュー登録/編集</th>
+                <th scope="col">お気に入り</th>
+                <th scope="col">削除</th>
+            </tr>
+        </thead>
         
         @foreach($serieslist as $series)
         <tr>
-            <td>{{ $series->title }}</td>
-            <td>{{ $series->author }}</td>
-            <td>{{ $series->publisher }}</td>
-            <td>{{ $series->current_volume }}</td>
-            @if( $series->checkuser($series->id) )
-                <td>{{ $series->checkuser($series->id)->volume }}</td>
-            @else
-                <td><a href={{ route('series.user_series.create', ['series' => $series->id]) }}>巻数登録</a></td>
-            @endif
-            @if( $series->checkuser($series->id) )
+            <td class = "align-middle">{{ $series->title }}</td>
+            <td class = "align-middle"><img src="{{ $series->image }}"></img></td>
+            <td class = "align-middle">{{ $series->author }}</td>
+            <td class = "align-middle">{{ $series->publisher }}</td>
+            <td class = "align-middle">{{ $series->current_volume }}</td>
+            <td class = "align-middle">
+                @if( $series->checkuser($series->id) )
+                    {{ $series->checkuser($series->id)->volume }}
+                @else
+                    <a href={{ route('series.user_series.create', ['series' => $series->id]) }}>巻数登録</a>
+                @endif
+            </td>
+            <td class = "align-middle">    
+                @if( $series->checkuser($series->id) )
+                    <a href={{ route('series.user_series.edit', $series->id) }}>巻数編集</a>
+                @endif
+            </td>
                 <!--<td>-->
                 <!--    <form action="" method="post">-->
                 <!--        <div class="edit_volume">-->
@@ -49,51 +76,40 @@
                 <!--        </div>-->
                 <!--    </form>-->
                 <!--</td>-->
-                <td><a href={{ route('series.user_series.edit', $series->id) }}>巻数編集</a></td>
-            @else
-                <td>    </td>
-            @endif
-            <td>{{ $series->status() }}</td>
-            <td>{{ $series->created_at }}</td>
-            <td>{{ $series->updated_at }}</td> 
-            @if( $series->user_id == Auth::id() )
-                <td><a href={{ route('series.edit', $series->id) }}>編集</a></td>
-            @else
-                <td>    </td>
-            @endif
-            <td><a href={{ route('series.series_reviews.index', ['series' => $series->id]) }}>レビュー一覧</a></td>
-            @if( $series->reviewsearch($series->id) )
-                <td><a href={{ route('series.series_reviews.edit', ['series' => $series->id]) }}>レビュー編集</a></td>
-            @else
-                <td><a href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a></td>
-            @endif
-            
-            <td>
+            <td class = "align-middle">{{ $series->status() }}</td>
+            <td class = "align-middle">{{ $series->created_at }}</td>
+            <td class = "align-middle">{{ $series->updated_at }}</td> 
+            <td class = "align-middle">   
+                @if( $series->user_id == Auth::id() )
+                <a href={{ route('series.edit', $series->id) }}>編集</a>
+                @endif
+            </td>
+            <td class = "align-middle"><a href={{ route('series.series_reviews.index', ['series' => $series->id]) }}>レビュー一覧</a></td>
+            <td class = "align-middle">
+                @if( $series->reviewsearch($series->id) )
+                    <a href={{ route('series.series_reviews.edit', ['series' => $series->id]) }}>レビュー編集</a>
+                @else
+                    <a href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a>
+                @endif
+            </td>
+            <td class = "align-middle">
                 <button type="button" id="favorite-btn-{{ $series->id}}" class="btn {{ $series->favorite_series()->where('user_id', Auth::id())->where('series_id', $series->id)->first() ? "bg-success" : "bg-white"}}" data-id="{{ $series->id }}" onclick="favoriteStatus({{ $series->id }})">お気に入り</button>
             </td>
-            <!--トップ画面で巻数編集できないか模索中-->
-            <!--<td>-->
-            <!--    <form action="{{ route('favorite_series.store') }}" method="POST">-->
-            <!--        @csrf-->
-            <!--        <input type="hidden" name="series_id" value={{ $series->id }}>-->
-                    
-            <!--        <button type="submit" class="btn {{ $series->favorite_series()->where('user_id', Auth::id())->where('series_id', $series->id)->first() ? "bg-success" : ""}}">お気に入り</button>-->
-            <!--    </form>-->
-            <!--</td>-->
-            <td>
+            <td class = "align-middle">
                 @if( $series->user_id == Auth::id() )
-                <form action="/series/{{ $series->id }}" action="{{ route('series.series_reviews.destroy', ['series' => $series->id]) }}" action="{{ route('series.user_series.destroy', $series->id)}}" method="POST" onsubmit="if(confirm('本当に削除しますか?')) { return true } else {return false };">
+                <form action="/series/{{ $series->id }}" method="POST" onsubmit="if(confirm('本当に削除しますか?')) { return true } else {return false };">
                     @method('DELETE')
                     @csrf
                     <button type="submit" class="btn btn-danger">削除</button>
                 </form>
-                @else
-                    <td>    </td>
                 @endif
             </td>
         </tr>
         @endforeach
     </table>
+    <div class="float-sm-right">
+    {{ $serieslist->links() }}
+    </div>
 </div>
 @endsection
                    

@@ -14,7 +14,8 @@
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^6.2",
-        "mopo922/laravel-treats": "^2.0"
+        "mopo922/laravel-treats": "^2.0",
+        "rakuten-ws/rws-php-sdk": "^1.1"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
