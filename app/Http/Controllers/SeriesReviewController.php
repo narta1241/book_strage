@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Series_Review;
+use App\SeriesReview;
 use App\Series;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class Series_ReviewController extends Controller
+class SeriesReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class Series_ReviewController extends Controller
     public function index(Series $series)
     {
         // dump($series);
-        $reviews = Series_Review::where('series_id', $series->id)->get();
+        $reviews = SeriesReview::where('series_id', $series->id)->get();
         $series = Series::where('id', $series->id)->first();
         // dd($reviews);
         return view('/series/series_reviews.index', compact('reviews','series'));
@@ -28,15 +28,15 @@ class Series_ReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    
+
     public function create(Series $series)
     {
         // dump($request);
         $title = $series->title;
         $id = $series->id;
         // dump($id);
-        // $result = Series_Review::where('series_id', $id)->where('user_id', Auth::id())->first();
-        // $validator = $request->validate([ 
+        // $result = SeriesReview::where('series_id', $id)->where('user_id', Auth::id())->first();
+        // $validator = $request->validate([
         //     'series_id' => "exists:$result",
         // ]);
         // dd($validator);
@@ -51,17 +51,17 @@ class Series_ReviewController extends Controller
      */
     public function store(Series $series, Request $request)
     {
-        $validator = $request->validate([ 
+        $validator = $request->validate([
             'comment' => 'required',
             'star' => 'required',
         ]);
-        Series_Review::create([
+        SeriesReview::create([
             'user_id' => Auth::id(),
             'series_id' => $series->id,
             'comment' => $request->input('comment'),
             'star' => $request->input('star')
         ]);
-        
+
         return redirect()->route('series.index');
     }
 
@@ -85,13 +85,13 @@ class Series_ReviewController extends Controller
     public function edit($series)
     {
         // dump($id);
-        $book = Series_Review::where('series_id', $series)->where('user_id', Auth::id())->first();
+        $book = SeriesReview::where('series_id', $series)->where('user_id', Auth::id())->first();
         if (!$book) {
             session()->flash('flash_message', '登録ユーザーではないので編集できません。');
             return redirect()->route('series.series_reviews.index', ['series' => $series]);
         }
-        
-        
+
+
         return view('/series/series_reviews.edit', compact('book'));
     }
 
@@ -104,17 +104,17 @@ class Series_ReviewController extends Controller
      */
     public function update($series, Request $request)
     {
-        $validator = $request->validate([ 
+        $validator = $request->validate([
             'comment' => 'required',
             'star' => 'required',
         ]);
-        $review = Series_Review::where('series_id', $series)->where('user_id', Auth::id())->first();
+        $review = SeriesReview::where('series_id', $series)->where('user_id', Auth::id())->first();
         // dd($review);
-        
+
         $review->comment = $request->input('comment');
         $review->star = $request->input('star');
         $review->save();
-        
+
         return redirect()->route('series_reviews.index');
     }
     /**
@@ -125,9 +125,9 @@ class Series_ReviewController extends Controller
      */
     public function destroy($series)
     {
-        $result = Series_Review::where('series_id', $series)->where('user_id',Auth::id())->first();
+        $result = SeriesReview::where('series_id', $series)->where('user_id',Auth::id())->first();
         $result->delete();
-        
+
         return redirect()->route('series.index');
     }
 }

@@ -10,9 +10,9 @@ class Series extends Model
 {
     const STATUS_FINAL = "完結";
     const STATUS_CONTINUE = "続刊";
-    
+
     protected $fillable = ['user_id', 'title', 'author', 'publisher', 'current_volume', 'final_flg'];
-    
+
     public static function status_list()
     {
         return [
@@ -20,7 +20,7 @@ class Series extends Model
             1 => self::STATUS_FINAL,
         ];
     }
-    
+
     public function status()
     {
         $status = "";
@@ -32,14 +32,14 @@ class Series extends Model
                 $status = self::STATUS_FINAL;
                 break;
         }
-        
+
         return $status;
     }
-   
+
    public function favorite_series()
     {
-        // dd($this->hasMany('App\Favorite_Series'));
-        return $this->hasMany('App\Favorite_Series');
+        // dd($this->hasMany('App\FavoriteSeries'));
+        return $this->hasMany('App\FavoriteSeries');
     }
    public function user_series()
     {
@@ -47,22 +47,22 @@ class Series extends Model
     }
     public function series_reviews()
     {
-        return $this->hasMany('App\Series_Review');
+        return $this->hasMany('App\SeriesReview');
     }
-    
-    
+
+
    public function checkuser($series)
     {
         $user = $this->user_series()->where('user_id', Auth::id())->where('series_id', $series)->first();
-        
+
         return $user;
     }
     public function reviewsearch($series)
     {
         $review = $this->series_reviews()->where('user_id', Auth::id())->where('series_id', $series)->first();
-        
+
         return $review;
     }
-    
-    
+
+
 }

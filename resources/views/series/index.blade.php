@@ -8,7 +8,7 @@
     <td>    </td>
 @endif
 <div class = "text-center">
-    
+
     <table class="table table-dark">
         <tr>
             <td>作品名</td>
@@ -26,7 +26,7 @@
             <td>お気に入り</td>
             <td>削除</td>
         </tr>
-        
+
         @foreach($serieslist as $series)
         <tr>
             <td>{{ $series->title }}</td>
@@ -55,7 +55,7 @@
             @endif
             <td>{{ $series->status() }}</td>
             <td>{{ $series->created_at }}</td>
-            <td>{{ $series->updated_at }}</td> 
+            <td>{{ $series->updated_at }}</td>
             @if( $series->user_id == Auth::id() )
                 <td><a href={{ route('series.edit', $series->id) }}>編集</a></td>
             @else
@@ -67,7 +67,7 @@
             @else
                 <td><a href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a></td>
             @endif
-            
+
             <td>
                 <button type="button" id="favorite-btn-{{ $series->id}}" class="btn {{ $series->favorite_series()->where('user_id', Auth::id())->where('series_id', $series->id)->first() ? "bg-success" : "bg-white"}}" data-id="{{ $series->id }}" onclick="favoriteStatus({{ $series->id }})">お気に入り</button>
             </td>
@@ -76,13 +76,13 @@
             <!--    <form action="{{ route('favorite_series.store') }}" method="POST">-->
             <!--        @csrf-->
             <!--        <input type="hidden" name="series_id" value={{ $series->id }}>-->
-                    
+
             <!--        <button type="submit" class="btn {{ $series->favorite_series()->where('user_id', Auth::id())->where('series_id', $series->id)->first() ? "bg-success" : ""}}">お気に入り</button>-->
             <!--    </form>-->
             <!--</td>-->
             <td>
                 @if( $series->user_id == Auth::id() )
-                <form action="/series/{{ $series->id }}" action="{{ route('series.series_reviews.destroy', ['series' => $series->id]) }}" action="{{ route('series.user_series.destroy', $series->id)}}" method="POST" onsubmit="if(confirm('本当に削除しますか?')) { return true } else {return false };">
+                <form action="/series/{{ $series->id }}" method="POST" onsubmit="if(confirm('本当に削除しますか?')) { return true } else {return false };">
                     @method('DELETE')
                     @csrf
                     <button type="submit" class="btn btn-danger">削除</button>
@@ -96,7 +96,7 @@
     </table>
 </div>
 @endsection
-                   
+
 @section('javascript')
     <script>
        function favoriteStatus(id) {
@@ -110,7 +110,7 @@
                 },
                 dataType : "json",
                 success: function(data) {
-           
+
                     if (data.result === 'created') {
                              $('#favorite-btn-' + seriesId).addClass('bg-success');
                         } else {

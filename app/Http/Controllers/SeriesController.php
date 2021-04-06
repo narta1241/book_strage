@@ -46,14 +46,14 @@ class SeriesController extends Controller
             'current_volume' => 'required',
         ]);
         Series::create([
-            'user_id' => $request->input('user_id'),
+            'user_id' => Auth::id(),
             'title' => $request->input('title'),
             'author' => $request->input('author'),
             'publisher' => $request->input('publisher'),
             'current_volume' => $request->input('current_volume'),
             'final_flg' => $request->input('final_flg')
         ]);
-        
+
         return redirect()->route('series.index');
     }
 
@@ -98,7 +98,7 @@ class SeriesController extends Controller
         $series->current_volume = $request->input('current_volume');
         $series->final_flg = $request->input('final_flg');
         $series->save();
-        
+
         return redirect()->route('series.index');
     }
 
@@ -111,7 +111,7 @@ class SeriesController extends Controller
     public function destroy(Series $series)
     {
         $series->delete();
-        
+
         return redirect()->route('series.index');
     }
 }
