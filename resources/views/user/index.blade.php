@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-   <!--<a class="ml-4" href={{ route('series.index') }}> 作品一覧へ </a>-->
-    
+   
     <div class ="row">
         <div class ="col-sm-8">
         <table class ="text-center table table-responsive-sm table-hover">
@@ -28,15 +27,15 @@
                 <td class = "align-middle">{{ $series->author }}</td>
                 <td class = "align-middle">{{ $series->publisher }}</td>
                 <td class = "align-middle">{{ $series->checkuser($series->id)['volume'] }}</td>
-                <td class = "align-middle"><a href={{ route('series.user_series.edit', $series->id) }}>巻数編集</a></td>
+                <td class = "align-middle"><a class="btn btn-outline-primary" href={{ route('series.user_series.edit', $series->id) }} >巻数編集</a></td>
                 <td class = "align-middle">{{ $series->status() }}</td>
                 <td class = "align-middle">{{ $series->salesDate }}</td>
-                <td class = "align-middle"><a href={{ route('series.series_reviews.index', ['series' => $series->id]) }}>レビュー一覧</a></td>
+                <td class = "align-middle"><a class="btn btn-outline-primary" href={{ route('series.series_reviews.index', ['series' => $series->id]) }}>レビュー一覧</a></td>
                 <td class = "align-middle">
                     @if( $series->reviewsearch($series->id) )
-                        <a href={{ route('series.series_reviews.edit', ['series' => $series->id]) }}>レビュー編集</a>
+                        <a class="btn btn-outline-primary" href={{ route('series.series_reviews.edit', ['series' => $series->id]) }}>レビュー編集</a>
                     @else
-                        <a href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a>
+                        <a class="btn btn-outline-primary" href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a>
                     @endif
                 </td>
                 <td class = "align-middle">
@@ -45,7 +44,10 @@
             </tr>
             @endforeach
         </table>
-       {{ $serieslist->links() }}
+            <div class="float-sm-right">
+                {{ $serieslist->links() }}
+            </div>
+      
        </div>
         <div class="col-sm-4">
             <div class="container">
@@ -69,6 +71,28 @@
                                <!--CalendarViewの各関数を利用して、タイトルとカレンダー本体をわけて出力-->
                                 {!! $dt !!}
             					
+                            @if($monthBooks)
+                                <div class="">
+                                                <!--<th>今月発売の漫画</th>-->
+                                    <table class="table" border=1>
+                                        <thead class="text-center table-info">
+                                            <tr>
+                                                <th scope="col">作品名</th>
+                                                <th scope="col">画像</th>
+                                                <th scope="col">発売日</th>
+                                            </tr>
+                                        </thead>
+                                    @foreach($monthBooks as $day)
+                                        @if($m == $day->conversion($day->salesDate))
+                                        <tr>
+                                            <td class = "align-middle">{{ $day->title }}</td>
+                                            <td class = "img-responsive"><img src={{ $day->image }}></img></td>
+                                            <td class = "align-middle">{{ $day->salesDate }}</td>
+                                        </tr>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
             				</div>
                        </div>
                </div>

@@ -27,6 +27,7 @@ class SeriesController extends Controller
         }
         // $posts = Series::paginate(10);
         // dd($posts);
+        // logger()->info('Something happends');
         return view('series.index', compact('serieslist', 'user'));
         // return view('series.index', ['search'=>$search], compact('serieslist', 'user', 'search'));
     }

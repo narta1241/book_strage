@@ -110,5 +110,6 @@ class User extends Authenticatable
         }
             // dd($seriesDate);
     }
+   
 }
 

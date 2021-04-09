@@ -6,6 +6,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use RakutenRws_Client;
+use DateTime;
 
 
 class Series extends Model
@@ -64,6 +65,12 @@ class Series extends Model
         $review = $this->series_reviews()->where('user_id', Auth::id())->where('series_id', $series)->first();
         
         return $review;
+    }
+     public function conversion($d){
+        $day = preg_replace('/[^0-9]/', '', $d);
+        $day = new Datetime($day);
+        $day = $day->format('n');
+        return $day;
     }
 }   
 

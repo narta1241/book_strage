@@ -15,16 +15,20 @@
 </form>
 
 <form action={{ route('series.index') }} method="GET">
-    <div class="input-group row justify-content-center mb-4">
+    <div class="input-group row  mb-4">
         <!--@method('GET')-->
         @csrf
+        <span class="col-md-5"></span>
         <input type="text" name="search" class="col-md-2 form-control" placeholder="作品名を入力"/>
         <span class="input-group-btn ml-2">
             <button type="submit" class='btn btn-outline-dark'>検索</button>
         </span>
+        <span class="col-md-4"></span>
+         <span class="col-md-1">
+            {{ $serieslist->links() }}
+        </span>
     </div>
 </form>
-
 <div class = "text-center">
     <table class="table table-responsive-sm table-hover">
         <thead class="table-info">
@@ -58,12 +62,12 @@
                 @if( $series->checkuser($series->id) )
                     {{ $series->checkuser($series->id)->volume }}
                 @else
-                    <a href={{ route('series.user_series.create', ['series' => $series->id]) }}>巻数登録</a>
+                    <a class="btn btn-outline-primary" href={{ route('series.user_series.create', ['series' => $series->id]) }}>巻数登録</a>
                 @endif
             </td>
             <td class = "align-middle">    
                 @if( $series->checkuser($series->id) )
-                    <a href={{ route('series.user_series.edit', $series->id) }}>巻数編集</a>
+                    <a class="btn btn-outline-primary" href={{ route('series.user_series.edit', $series->id) }}>巻数編集</a>
                 @endif
             </td>
                 <!--<td>-->
@@ -81,15 +85,15 @@
             <td class = "align-middle">{{ $series->updated_at }}</td> 
             <td class = "align-middle">   
                 @if( $series->user_id == Auth::id() )
-                <a href={{ route('series.edit', $series->id) }}>編集</a>
+                <a class="btn btn-outline-primary" href={{ route('series.edit', $series->id) }}>編集</a>
                 @endif
             </td>
-            <td class = "align-middle"><a href={{ route('series.series_reviews.index', ['series' => $series->id]) }}>レビュー一覧</a></td>
+            <td class = "align-middle"><a class="btn btn-outline-primary" href={{ route('series.series_reviews.index', ['series' => $series->id]) }}>レビュー一覧</a></td>
             <td class = "align-middle">
                 @if( $series->reviewsearch($series->id) )
-                    <a href={{ route('series.series_reviews.edit', ['series' => $series->id]) }}>レビュー編集</a>
+                    <a class="btn btn-outline-primary" href={{ route('series.series_reviews.edit', ['series' => $series->id]) }}>レビュー編集</a>
                 @else
-                    <a href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a>
+                    <a class="btn btn-outline-primary" href={{ route('series.series_reviews.create', ['series' => $series->id]) }}>レビュー登録</a>
                 @endif
             </td>
             <td class = "align-middle">

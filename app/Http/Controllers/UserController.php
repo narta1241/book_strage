@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\CalendarView;
 use Carbon\Carbon;
+use Datetime;
 
 class UserController extends Controller
 {
@@ -25,8 +26,16 @@ class UserController extends Controller
         // dump($Owned_book);
         $serieslist = Series::whereIn('id', $Owned_book)->orderBy('created_at','desc')->paginate(10);
         //次巻発売日を検索
-        User::getSalesDate();
-        
+        if($Owned_book){
+            $search = app()->make('App\Http\Controllers\SampleController');
+            $data   = $search->queuesSalesDate();
+        }
+            // dd($data);
+            // User::getSalesDate();
+            
+            // return redirect()->route('sample_queues');
+        $monthBooks = Series::whereIn('id', $Owned_book)->whereNotIn ('salesDate',[""])->orderBy('salesDate','asc')->get();
+        // dd($monthBooks);
         $m = isset($_GET['m'])? htmlspecialchars($_GET['m'], ENT_QUOTES, 'utf-8') : '';
         $y = isset($_GET['y'])? htmlspecialchars($_GET['y'], ENT_QUOTES, 'utf-8') : '';
         if($m!=''||$y!=''){ 
@@ -36,7 +45,7 @@ class UserController extends Controller
            }
         $dt = CalendarView::renderCalendar($dt);
         // dd($calendar);
-        return view('user.index', compact('serieslist', 'user', 'dt'));
+        return view('user.index', compact('serieslist', 'user', 'dt', 'monthBooks', 'm'));
     }
 
     /**
@@ -72,5 +81,5 @@ class UserController extends Controller
     {
         //
     }
-
+    
 }

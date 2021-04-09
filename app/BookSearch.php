@@ -118,7 +118,7 @@ class BookSearch extends Model
             // 'keyword' => $keyword,
         ));
         //エラー回避
-        // sleep(1);
+        sleep(1);
             }
         // レスポンスが正しいかを isOk() で確認することができます
         if ($response->isOk()) {

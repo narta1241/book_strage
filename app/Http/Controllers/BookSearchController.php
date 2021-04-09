@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Series;
 use App\BookSearch;
 use Illuminate\Http\Request;
 
@@ -28,11 +29,14 @@ class BookSearchController extends Controller
     {
         // dump($request);
         $keyword = $request->keyword;
-        if(!$keyword){
-            return redirect()->route('series.index');
+        if (!empty($keyword)){
+            $serieslist = BookSearch::titleSearch($keyword);
+        }else{
+            $serieslist = Series::orderBy('created_at','desc')->paginate(10);
+            // dd($serieslist);
         }
         //  $request['keyword'] = $request['keyword'] . ' 1';
-        $serieslist = BookSearch::titleSearch($keyword);
+        
         
         // dd($keyword);
         return view('bookSearch.index', compact('serieslist', 'keyword'));
@@ -106,6 +110,9 @@ class BookSearchController extends Controller
      public function search(Request $request)
     {
         // dd($request);
+        $validator = $request->validate([       // <-- ここがバリデーション部分
+            'keyword' => 'required',
+        ]);
         return redirect()->route('bookSearch.index',$request->keyword);
     }
 }
