@@ -35,17 +35,17 @@ class FileOperation
             file_put_contents($file, $current);
         }
     }
-   
+
     public function getSalesDate()
     {
         $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
-        $serieslist = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
+        $seriesList = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
         $today = date('Y/m/d');
         $today = new DateTime($today);
-        
-        foreach($serieslist as $series){
+
+        foreach($seriesList as $series){
             $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-            
+
             if($salesDay){
                 $salesDay =new Datetime($salesDay);
             }
@@ -57,7 +57,7 @@ class FileOperation
                     $series->save();
                 }
             }
-            
+
         }
     }
 }

@@ -25,7 +25,7 @@
         </span>
         <span class="col-md-4"></span>
          <span class="col-md-1">
-            {{ $serieslist->links() }}
+            {{ $seriesList->links() }}
         </span>
     </div>
 </form>
