@@ -7,6 +7,8 @@ use Carbon\Carbon;      //CarbonはLaravelで日付を扱う時に利用可能�
 use App\Series;
 use Datetime;
 use App\User;
+use App\UserSeries;
+use Illuminate\Support\Facades\Auth;
 
 class CalendarView extends Model
 {
@@ -15,6 +17,7 @@ class CalendarView extends Model
     public static function renderCalendar($dt)
     {
         $dt->startOfMonth(); //今月の最初の日
+        // dd($dt->startOfMonth());
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $style = "";//CSS 色
         $styleBG = "";//CSS　背景色
@@ -25,11 +28,13 @@ class CalendarView extends Model
 
         foreach ($salesDays as $salesDay) {
             $salesDay = preg_replace('/[^0-9]/', '', $salesDay);
-            $salesDay = new Datetime($salesDay);
-            $regularDays[] = $salesDay->format('Y-m-d');
+            if ($salesDay) {
+                $salesDay = new Datetime($salesDay);
+                $regularDays[] = $salesDay->format('Y-m-d');
+            }
         }
-        // １ヶ月前
-        $sub = Carbon::createFromDate($dt->year, $dt->month, $dt->day);
+         //１ヶ月前
+        $sub = Carbon::createFromDate($dt->year,$dt->month,$dt->day);
         $subMonth = $sub->subMonth();
         $subY = $subMonth->year;
         $subM = $subMonth->month;
@@ -46,12 +51,11 @@ class CalendarView extends Model
         $todayM = $today->month;
 
         // リンク
-        $title = '<caption><a href="./user?y=' . $todayY . '&&m=' . $todayM . '">今日　</a>';
-        $title .= '<a href="./user?y=' . $subY . '&&m=' . $subM . '"><<前月 </a>';//前月のリンク
-        $title .= $dt->year . '年' . $dt->month . '月';//月と年を表示
-        $title .= '<a href="./user?y=' . $addY . '&&m=' . $addM . '"> 来月>></a></caption>';//来月リンク
-        // $title .= '<button type="button" class="ml-4" id="btn" onclick="getSalesDate()">発売情報更新</button></div>';
-        // 曜日の配列作成
+        $title = '<caption><a href="./user?y='.$todayY.'&&m='.$todayM.'">今日　</a>';
+        $title .= '<a href="./user?y='.$subY.'&&m='.$subM.'"><<前月 </a>';//前月のリンク
+        $title .= $dt->year.'年'.$dt->month.'月';//月と年を表示
+        $title .= '<a href="./user?y='.$addY.'&&m='.$addM.'"> 来月>></a></caption>';//来月リンク
+        //曜日の配列作成
         $headings = ['月','火','水','木','金','土','日'];
 
         $calendar = '<div class="calendar"><table class="table" border=1>';
@@ -99,30 +103,8 @@ class CalendarView extends Model
 
         $calendar .= '</tr></tbody>';
         $calendar .= '</table></div>';
-        return $title . $calendar;
+
+        return $title.$calendar;
     }
 
-    public static function getSalesDate()
-    {
-        $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
-        $seriesList = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at', 'desc')->get();
-
-        $today = date('Y/m/d');
-        $today = new DateTime($today);
-
-        foreach ($seriesList as $series) {
-            $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-            if ($salesDay) {
-                $salesDay = new Datetime($salesDay);
-            }
-            if (!$salesDay || $salesDay < $today) {
-                $series->salesDate = BookSearch::saleDaySearch($series->title);
-                $newSalesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-                $newSalesDay = new Datetime($newSalesDay);
-                if ($newSalesDay > $today) {
-                    $series->save();
-                }
-            }
-        }
-    }
 }

@@ -11,14 +11,6 @@
 |
 */
 // Route::resource('series.series_reviews', 'SeriesReviewController')->middleware('auth');
-
-// Route::get('series/{series}/user_series', 'UserSeriesController@index')->name('series.user_series.index')->middleware('auth');
-// Route::get('series/{series}/user_series/create', 'UserSeriesController@create')->name('series.user_series.create')->middleware('auth');
-// Route::post('series/{series}/user_series/store', 'UserSeriesController@store')->name('series.user_series.store')->middleware('auth');
-// Route::get('series/{series}/user_series/edit', 'UserSeriesController@edit')->name('series.user_series.edit')->middleware('auth');
-// Route::put('series/{series}/user_series/update', 'UserSeriesController@update')->name('series.user_series.update')->middleware('auth');
-// Route::delete('series/{series}/user_series/destroy', 'UserSeriesController@destroy')->name('series.user_series.destroy')->middleware('auth');
-
 Route::group(['middleware' => ['auth']], function () {
     Route::get('series/{series}/user_series', 'UserSeriesController@index')->name('series.user_series.index');
     Route::get('series/{series}/user_series/create', 'UserSeriesController@create')->name('series.user_series.create');
@@ -39,24 +31,21 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('user', 'UserController@index')->name('user.index');
 });
 
-
 Route::resource('series', 'SeriesController');
 
 Route::get('bookSearch', 'BookSearchController@search')->name('bookSearch.search');
-Route::get('bookSearch/{keyword}', 'BookSearchController@index')->name('bookSearch.index');
-
+Route::get('bookSearch/{keyword?}', 'BookSearchController@index')->name('bookSearch.index');
 Route::get('series/create/{id}', 'SeriesController@create')->name('series.create')->middleware('auth');
 Route::get('/series/{keyword?}', 'SeriesController@index')->name('series.index');
-
-// Route::get('/', 'CalendarController@show');
-
+Route::get('sample/queues/none', 'SampleController@queuesNone');
+Route::get('sample/queues/database', 'SampleController@queuesDatabase');
 // Route::resource('user_series', 'UserSeriesController')->middleware('auth');
 // Route::get('series/{series}/favorite_series/store', 'FavoriteSeriesController@store')->name('series.favorite_series.store')->middleware('auth');
 
 Route::get('/', function () {
     $seriesList = App\Series::orderBy('created_at','desc')->paginate(10);
-     $user = App\User::where('id', Auth::id())->first();
-    return view('series.index', compact('seriesList', 'user',));
+    $user = App\User::where('id', Auth::id())->first();
+    return view('series.index', compact('seriesList', 'user'));
 });
 
 Auth::routes();

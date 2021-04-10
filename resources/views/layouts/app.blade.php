@@ -72,7 +72,7 @@
                             </li>
                         @endguest
                         <a class="navbar-brand" href="{{ route('user.index') }}">
-                            <h7>マイページ</h7>
+                            <p>マイページ</p>
                         </a>
                     </ul>
                 </div>

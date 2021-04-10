@@ -98,23 +98,24 @@ class BookSearch extends Model
 
         // IchibaItemSearch API から、指定条件で検索
         if (!empty($keyword)) {
-            $response = $client->execute('BooksBookSearch', array(
-            //入力パラメーター
+            $response = $client->execute('BooksBookSearch', [
+                //入力パラメーター
                 'title' => $keyword,
                 'sort' => '-releaseDate',
                 'hits' => '1',
-            // 'keyword' => $keyword,
-            ));
-        //エラー回避
-        // sleep(1);
+            ]);
+            //エラー回避
+            sleep(1);
         }
+
         // レスポンスが正しいかを isOk() で確認することができます
         if ($response->isOk()) {
             foreach ($response as $item) {
                 $saleslist = $item['salesDate'];
             }
         } else {
-            echo 'Error:' . $response->getMessage();
+            echo 'Error:' . $response->getMessage(); // TODO: いらないような気がする
+            \Log::error($response->getMessage());
         }
 
         return $saleslist;

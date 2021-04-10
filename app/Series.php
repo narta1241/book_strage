@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use RakutenRws_Client;
+use DateTime;
 
 class Series extends Model
 {
@@ -40,10 +41,12 @@ class Series extends Model
     {
         return $this->hasMany('App\FavoriteSeries');
     }
+
     public function user_series()
     {
         return $this->hasMany('App\UserSeries');
     }
+
     public function series_reviews()
     {
         return $this->hasMany('App\SeriesReview');
@@ -56,10 +59,20 @@ class Series extends Model
 
         return $user;
     }
+
     public function reviewsearch($series)
     {
         $review = $this->series_reviews()->where('user_id', Auth::id())->where('series_id', $series)->first();
 
         return $review;
     }
+
+    public function conversion($d)
+    {
+        $day = preg_replace('/[^0-9]/', '', $d);
+        $day = new Datetime($day);
+        $day = $day->format('n');
+        return $day;
+    }
 }
+
