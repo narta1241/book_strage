@@ -22,7 +22,7 @@ class UserController extends Controller
         $user = User::where('id', Auth::id())->first();
         $Owned_book = UserSeries::where('user_id', $user->id)->pluck('series_id');
 
-        $serieslist = Series::whereIn('id', $Owned_book)->orderBy('created_at', 'desc')->paginate(10);
+        $seriesList = Series::whereIn('id', $Owned_book)->orderBy('created_at', 'desc')->paginate(10);
         // 次巻発売日を検索
         User::getSalesDate();
 
@@ -36,7 +36,7 @@ class UserController extends Controller
         }
 
         $dt = CalendarView::renderCalendar($dt);
-        return view('user.index', compact('serieslist', 'user', 'dt'));
+        return view('user.index', compact('seriesList', 'user', 'dt'));
     }
 
     /**

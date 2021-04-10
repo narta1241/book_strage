@@ -25,16 +25,16 @@
             </tr>
         </thead>
     <div>
-        @foreach ($serieslist as $item)
-        <tr>   
-        
+        @foreach ($seriesList as $item)
+        <tr>
+
             <td class ="align-middle">{{ $item['title'] }}</td>
             <td class ="align-middle"><img src="{{ $item['largeImageUrls'] }}"></img></td>
             <td class ="align-middle">{{ $item['author'] }}</td>
             <td class ="align-middle">{{ $item['publisher'] }}</td>
             <td class ="align-middle"><a class="text-dark" href={{ route('series.create', ['id' => $item['isbn']]) }}><button class ='btn btn-outline-primary' type="button">選択</button></a></td>
-            
-            
+
+
         </tr>
         @endforeach
     </div>

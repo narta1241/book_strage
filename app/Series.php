@@ -38,7 +38,6 @@ class Series extends Model
 
     public function favorite_series()
     {
-        // dd($this->hasMany('App\FavoriteSeries'));
         return $this->hasMany('App\FavoriteSeries');
     }
     public function user_series()

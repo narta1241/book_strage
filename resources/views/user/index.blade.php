@@ -2,7 +2,7 @@
 
 @section('content')
    <!--<a class="ml-4" href={{ route('series.index') }}> 作品一覧へ </a>-->
-    
+
     <div class ="row">
         <div class ="col-sm-8">
         <table class ="text-center table table-responsive-sm table-hover">
@@ -21,7 +21,7 @@
                 <th scope="col">お気に入り</th>
             </tr>
             </thead>
-            @foreach($serieslist as $series)
+            @foreach($seriesList as $series)
             <tr>
                 <td class = "align-middle">{{ $series->title }}</td>
                 <td class = "align-middle"><img src="{{ $series->image }}"></img></td>
@@ -45,7 +45,7 @@
             </tr>
             @endforeach
         </table>
-       {{ $serieslist->links() }}
+       {{ $seriesList->links() }}
        </div>
         <div class="col-sm-4">
             <div class="container">
@@ -68,7 +68,7 @@
                             <div class="card-body">
                                <!--CalendarViewの各関数を利用して、タイトルとカレンダー本体をわけて出力-->
                                 {!! $dt !!}
-            					
+
             				</div>
                        </div>
                </div>
@@ -89,7 +89,7 @@
                 },
                 dataType : "json",
                 success: function(data) {
-           
+
                     if (data.result === 'created') {
                              $('#favorite-btn-' + seriesId).addClass('bg-success');
                         } else {

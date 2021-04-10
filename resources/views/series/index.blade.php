@@ -46,8 +46,8 @@
                 <th scope="col">削除</th>
             </tr>
         </thead>
-        
-        @foreach($serieslist as $series)
+
+        @foreach($seriesList as $series)
         <tr>
             <td class = "align-middle">{{ $series->title }}</td>
             <td class = "align-middle"><img src="{{ $series->image }}"></img></td>
@@ -61,7 +61,7 @@
                     <a href={{ route('series.user_series.create', ['series' => $series->id]) }}>巻数登録</a>
                 @endif
             </td>
-            <td class = "align-middle">    
+            <td class = "align-middle">
                 @if( $series->checkuser($series->id) )
                     <a href={{ route('series.user_series.edit', $series->id) }}>巻数編集</a>
                 @endif
@@ -78,8 +78,8 @@
                 <!--</td>-->
             <td class = "align-middle">{{ $series->status() }}</td>
             <td class = "align-middle">{{ $series->created_at }}</td>
-            <td class = "align-middle">{{ $series->updated_at }}</td> 
-            <td class = "align-middle">   
+            <td class = "align-middle">{{ $series->updated_at }}</td>
+            <td class = "align-middle">
                 @if( $series->user_id == Auth::id() )
                 <a href={{ route('series.edit', $series->id) }}>編集</a>
                 @endif
@@ -108,11 +108,11 @@
         @endforeach
     </table>
     <div class="float-sm-right">
-    {{ $serieslist->links() }}
+    {{ $seriesList->links() }}
     </div>
 </div>
 @endsection
-                   
+
 @section('javascript')
     <script>
        function favoriteStatus(id) {
@@ -126,7 +126,7 @@
                 },
                 dataType : "json",
                 success: function(data) {
-           
+
                     if (data.result === 'created') {
                              $('#favorite-btn-' + seriesId).addClass('bg-success');
                         } else {

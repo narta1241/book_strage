@@ -36,12 +36,10 @@ class FavoriteSeriesController extends Controller
      */
     public function store(Request $request)
     {
-        // dump($request);
         // お気に入りを取得する
         $favorite = FavoriteSeries::where('user_id', Auth::id())
             ->where('series_id', $request->input('series_id'))
             ->first();
-            // dd($favorite);
         // 既にお気に入りされている場合
         if ($favorite) {
             $favorite->delete();

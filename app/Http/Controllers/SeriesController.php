@@ -18,16 +18,13 @@ class SeriesController extends Controller
     public function index()
     {
         $user = User::where('id', Auth::id())->first();
-        // dd($user);
+
         if (!empty($_GET['search'])) {
-            $serieslist = Series::where('title', 'like', "%{$_GET['search']}%")->orderBy('created_at', 'desc')->paginate(10);
+            $seriesList = Series::where('title', 'like', "%{$_GET['search']}%")->orderBy('created_at', 'desc')->paginate(10);
         } else {
-            $serieslist = Series::orderBy('created_at', 'desc')->paginate(10);
+            $seriesList = Series::orderBy('created_at', 'desc')->paginate(10);
         }
-        // $posts = Series::paginate(10);
-        // dd($posts);
-        return view('series.index', compact('serieslist', 'user'));
-        // return view('series.index', ['search'=>$search], compact('serieslist', 'user', 'search'));
+        return view('series.index', compact('seriesList', 'user'));
     }
 
     /**
@@ -38,7 +35,6 @@ class SeriesController extends Controller
     public function create($id)
     {
         $series = BookSearch::bookSearch($id);
-        // dd($series);
         return view('series.create', compact('series'));
     }
 

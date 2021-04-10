@@ -57,25 +57,20 @@ class SeriesReview extends Model
         }
         return $status;
     }
+
     public function series()
     {
         return $this->belongsTo('App\Series');
     }
+
     public function user()
     {
         return $this->belongsTo('App\User');
     }
+
     public function userName($userId)
     {
         $name = $this->user()->where('id', $userId)->value('name');
         return $name;
     }
-    // public function seriesTitle($seriesId)
-    // {
-    //     // dump($seriesId);
-    //     $title = $this->series()->where('id',$seriesId)->value('title');
-
-    //     // dd($title);
-    //     return $title;
-    // }
 }
