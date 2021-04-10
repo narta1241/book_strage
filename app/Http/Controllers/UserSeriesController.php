@@ -7,7 +7,6 @@ use App\UserSeries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class UserSeriesController extends Controller
 {
     /**
@@ -41,9 +40,9 @@ class UserSeriesController extends Controller
         // dump($request);
         $maxV = Series::where('id', $series->id)->value('current_volume');
         // dd($maxV);
-         $validator = $request->validate([      
+         $validator = $request->validate([
             'volume' => "required|numeric|max:$maxV",
-        ]);
+         ]);
         
         // dd($validator);
         UserSeries::create([
@@ -83,7 +82,7 @@ class UserSeriesController extends Controller
             return redirect()->route('series.index');
         }
         
-        return view('users_series.edit', compact('series','volume'));
+        return view('users_series.edit', compact('series', 'volume'));
     }
 
     /**
@@ -98,9 +97,9 @@ class UserSeriesController extends Controller
         // dump($request);
         $maxV = Series::where('id', $series)->value('current_volume');
         // dd($maxV);
-         $validator = $request->validate([      
+         $validator = $request->validate([
             'volume' => "required|numeric|max:$maxV",
-        ]);
+         ]);
         $userSeries = UserSeries::where('series_id', $series)->where('user_id', Auth::id())->first();
         // dd($validator);
         $userSeries->volume = $request->input('volume');
@@ -118,7 +117,7 @@ class UserSeriesController extends Controller
     public function destroy($userSeries)
     {
         // dump($userSeries);
-        $result = UserSeries::where('series_id', $userSeries)->where('user_id',Auth::id())->first();
+        $result = UserSeries::where('series_id', $userSeries)->where('user_id', Auth::id())->first();
         // dd($result);
         $result->delete();
         return redirect()->route('series.index');

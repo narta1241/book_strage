@@ -5,37 +5,23 @@ namespace App\Http\Controllers;
 use App\BookSearch;
 use Illuminate\Http\Request;
 
-
 class BookSearchController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-     //google books api のindex
-    // public function index(Request $request)
-    // {
-    //     // dd($request);
-    //     $request['title'] = $request['title'] . ' 1';
-    //     // dd($request['title']);
-    //     $serieslist = BookSearch::titlesearch( $request['title'] );
-    //     // dd($serieslist);
-    //     //画像がないものはバリデ
-    //     return view('bookSearch.index', compact('serieslist'));
-    // }
     public function index(Request $request)
     {
-        // dump($request);
         $keyword = $request->keyword;
-        if(!$keyword){
+        if (!$keyword) {
             return redirect()->route('series.index');
         }
-        //  $request['keyword'] = $request['keyword'] . ' 1';
-        $serieslist = BookSearch::titleSearch($keyword);
-        
-        // dd($keyword);
-        return view('bookSearch.index', compact('serieslist', 'keyword'));
+        $seriesList = BookSearch::titleSearch($keyword);
+
+        return view('bookSearch.index', compact('seriesList', 'keyword'));
     }
 
     /**
@@ -103,9 +89,15 @@ class BookSearchController extends Controller
     {
         //
     }
-     public function search(Request $request)
+
+    /**
+     *
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
     {
-        // dd($request);
-        return redirect()->route('bookSearch.index',$request->keyword);
+        return redirect()->route('bookSearch.index', $request->keyword);
     }
 }

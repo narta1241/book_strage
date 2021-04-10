@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Favorite_Series;
+use App\FavoriteSeries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,29 +38,27 @@ class FavoriteSeriesController extends Controller
     {
         // dump($request);
         // お気に入りを取得する
-        $favorite = Favorite_Series::where('user_id', Auth::id())
+        $favorite = FavoriteSeries::where('user_id', Auth::id())
             ->where('series_id', $request->input('series_id'))
             ->first();
             // dd($favorite);
         // 既にお気に入りされている場合
-        if ($favorite)  {
+        if ($favorite) {
             $favorite->delete();
-        
+
             return response()->json([
                 'result' => 'deleted'
             ]);
         // お気に入りされていない場合
-            
         } else {
-            
-            Favorite_Series::create([
+            FavoriteSeries::create([
                 'series_id' => $request->input('series_id'),
                 'user_id' => Auth::id(),
             ]);
-            
+
              return response()->json([
                 'result' => 'created'
-            ]);
+             ]);
         }
         // return redirect()->route('series.index');
     }
@@ -68,10 +66,10 @@ class FavoriteSeriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Favorite_Series  $favorite_Series
+     * @param  \App\FavoriteSeries  $favorite_Series
      * @return \Illuminate\Http\Response
      */
-    public function show(Favorite_Series $favorite_Series)
+    public function show(FavoriteSeries $favorite_Series)
     {
         //
     }
@@ -79,10 +77,10 @@ class FavoriteSeriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Favorite_Series  $favorite_Series
+     * @param  \App\FavoriteSeries  $favorite_Series
      * @return \Illuminate\Http\Response
      */
-    public function edit(Favorite_Series $favorite_Series)
+    public function edit(FavoriteSeries $favorite_Series)
     {
         //
     }
@@ -91,10 +89,10 @@ class FavoriteSeriesController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Favorite_Series  $favorite_Series
+     * @param  \App\FavoriteSeries  $favorite_Series
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Favorite_Series $favorite_Series)
+    public function update(Request $request, FavoriteSeries $favorite_Series)
     {
         //
     }
@@ -102,10 +100,10 @@ class FavoriteSeriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Favorite_Series  $favorite_Series
+     * @param  \App\FavoriteSeries  $favorite_Series
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Favorite_Series $favorite_Series)
+    public function destroy(FavoriteSeries $favorite_Series)
     {
         //
     }
