@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Series;
 use App\UserSeries;
-use App\BookSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\CalendarView;
@@ -23,30 +22,28 @@ class UserController extends Controller
     {
         //ユーザー情報取得
         $user = User::where('id', Auth::id())->first();
-        //ユーザー所持書籍取得
-        $Owned_book = UserSeries::where('user_id', $user->id)->pluck('series_id');
-        //ユーザー所持シリーズ取得
-        $serieslist = Series::whereIn('id', $Owned_book)->orderBy('created_at','desc')->paginate(10);
-        
-        //次巻発売日を検索(非同期)
+        $ownedBook = UserSeries::where('user_id', $user->id)->pluck('series_id');
+        $seriesList = Series::whereIn('id', $ownedBook)->orderBy('created_at','desc')->paginate(10);
+        // 次巻発売日を検索
+        if ($ownedBook) {
             $search = app()->make('App\Http\Controllers\SampleController');
-            $data   = $search->queuesBookSearch();
-        //今月発売の書籍取得
-        $monthBooks = Series::whereIn('id', $Owned_book)->whereNotIn ('salesDate',[""])->orderBy('salesDate','asc')->get();
-        //カレンダー作成
+            $data   = $search->queuesSalesDate();
+        }
+        $monthBooks = Series::whereIn('id', $ownedBook)->whereNotIn ('salesDate',[""])->orderBy('salesDate','asc')->get();
+
         $m = isset($_GET['m'])? htmlspecialchars($_GET['m'], ENT_QUOTES, 'utf-8') : '';
         if(!$m){
             $m =  date('n');
         }
         $y = isset($_GET['y'])? htmlspecialchars($_GET['y'], ENT_QUOTES, 'utf-8') : '';
-        if($m!=''||$y!=''){ 
+        if ($m!=''||$y!='') {
             $dt = Carbon::createFromDate($y,$m,01);
-           }else{
+        } else {
             $dt = Carbon::createFromDate();
-           }
+        }
+
         $dt = CalendarView::renderCalendar($dt);
-        
-        return view('user.index', compact('serieslist', 'user', 'dt', 'monthBooks', 'm'));
+        return view('user.index', compact('seriesList', 'user', 'dt', 'monthBooks', 'm'));
     }
 
     /**
@@ -68,9 +65,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.
@@ -82,5 +78,4 @@ class UserController extends Controller
     {
         //
     }
-    
 }

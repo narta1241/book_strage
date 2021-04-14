@@ -6,40 +6,23 @@ use App\Series;
 use App\BookSearch;
 use Illuminate\Http\Request;
 
-
 class BookSearchController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-     //google books api のindex
-    // public function index(Request $request)
-    // {
-    //     // dd($request);
-    //     $request['title'] = $request['title'] . ' 1';
-    //     // dd($request['title']);
-    //     $serieslist = BookSearch::titlesearch( $request['title'] );
-    //     // dd($serieslist);
-    //     //画像がないものはバリデ
-    //     return view('bookSearch.index', compact('serieslist'));
-    // }
     public function index(Request $request)
     {
-        // dump($request);
         $keyword = $request->keyword;
-        if (!empty($keyword)){
-            $serieslist = BookSearch::titleSearch($keyword);
-        }else{
-            $serieslist = Series::orderBy('created_at','desc')->paginate(10);
-            // dd($serieslist);
+        if (!empty($keyword)) {
+            $seriesList = BookSearch::titleSearch($keyword);
+        } else {
+            $seriesList = Series::orderBy('created_at','desc')->paginate(10);
         }
-        //  $request['keyword'] = $request['keyword'] . ' 1';
-        
-        
-        // dd($keyword);
-        return view('bookSearch.index', compact('serieslist', 'keyword'));
+        return view('bookSearch.index', compact('seriesList', 'keyword'));
     }
 
     /**
@@ -107,12 +90,18 @@ class BookSearchController extends Controller
     {
         //
     }
-     public function search(Request $request)
+
+    /**
+     *
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
     {
-        // dd($request);
-        $validator = $request->validate([       // <-- ここがバリデーション部分
+        $request->validate([
             'keyword' => 'required',
         ]);
-        return redirect()->route('bookSearch.index',$request->keyword);
+        return redirect()->route('bookSearch.index', $request->keyword);
     }
 }

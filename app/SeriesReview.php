@@ -4,26 +4,26 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Series_Review extends Model
+class SeriesReview extends Model
 {
     use \LaravelTreats\Model\Traits\HasCompositePrimaryKey;
-    
+
     public $incrementing = false;
-    
+
     protected $primaryKey = ['user_id', 'series_id'];
-    
+
     protected $fillable = ['user_id', 'series_id', 'comment', 'star'];
-    
+
     protected $table = 'series_reviews';
-    
+
     public $timestamps = false;
-    
+
     const STAR1 = '⭐️';
     const STAR2 = '⭐️⭐';
     const STAR3 = '⭐️⭐️⭐';
     const STAR4 = '⭐️⭐️⭐️⭐';
     const STAR5 = '⭐️⭐️⭐️⭐️⭐';
-    
+
     public static function star_list()
     {
         return [
@@ -34,12 +34,11 @@ class Series_Review extends Model
             5 => self::STAR5,
         ];
     }
-    
+
     public function star()
     {
         $status = "";
-        switch ($this->star) 
-        {
+        switch ($this->star) {
             case 1:
                 $status = self::STAR1;
                 break;
@@ -58,25 +57,20 @@ class Series_Review extends Model
         }
         return $status;
     }
+
     public function series()
     {
         return $this->belongsTo('App\Series');
     }
+
     public function user()
     {
         return $this->belongsTo('App\User');
     }
+
     public function userName($userId)
     {
         $name = $this->user()->where('id', $userId)->value('name');
         return $name;
     }
-    // public function seriesTitle($seriesId)
-    // {
-    //     // dump($seriesId);
-    //     $title = $this->series()->where('id',$seriesId)->value('title');
-        
-    //     // dd($title);
-    //     return $title;
-    // }
 }

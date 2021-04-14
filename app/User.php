@@ -10,7 +10,6 @@ use App\BookSearch;
 use App\Series;
 use DateTime;
 
-
 class User extends Authenticatable
 {
     use Notifiable;
@@ -41,13 +40,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function user_series()
     {
         return $this->hasOne('App\UserSeries');
     }
+
     public function series_review()
     {
-        return $this->hasmany('App\Series_Review');
+        return $this->hasmany('App\SeriesReview');
     }
     public function favorite_series()
     {
@@ -56,22 +57,21 @@ class User extends Authenticatable
     public function countVolume()
     {
         $num = $this->user_series()->where('user_id', Auth::id())->count();
-        
-        // dd($num);
+
         return $num;
     }
+
     public function sumVolume()
     {
         $sum = $this->user_series()->where('user_id', Auth::id())->sum('volume');
-        
-        // dd($sum);
+
         return $sum;
     }
+
     public function reviewCount()
     {
         $num = $this->series_review()->where('user_id', Auth::id())->count();
-        
-        // dd($num);
+
         return $num;
     }
     public function favoriteCount()
@@ -80,49 +80,10 @@ class User extends Authenticatable
         
         return $num;
     }
-    
     public function checkuser($series)
     {
         $user = $this->user_series()->where('user_id', Auth::id())->where('series_id', $series)->first();
-        
-        // dd($user);
+
         return $user;
     }
-    //  public static function getSalesDate()
-    // {
-    //     $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
-    //     //  dd($Owned_book);
-    //     $serieslist = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
-    //     // dump($serieslist);
-    //     $today = date('Y/m/d');
-    //     $today = new DateTime($today);
-    //     // dump($today);
-    //     foreach($serieslist as $series){
-    //         $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-    //         // dump($salesDay);
-    //         if($salesDay){
-    //             $salesDay =new DateTime($salesDay);
-    //         }
-    //         if(!$salesDay || $salesDay < $today){
-                
-    //             // dump($salesDay);
-    //             $search = app()->make('App\Http\Controllers\SampleController');
-    //             $data   = $search->queuesBookSearch($series->title);
-    //             // $series->salesDate = BookSearch::saleDaySearch($series->title);
-    //             // dd($data);
-    //             // $newSalesDay = preg_replace('/[^0-9]/', '', $data);
-    //             // $newSalesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-    //             $newSalesDay = new DateTime($data);
-    //         dump($today);
-    //             if($newSalesDay>$today){
-    //                 dd($newSalesDay);
-    //                 $series->save();
-    //             }
-    //         }
-            
-    //     }
-            // dd($seriesDate);
-    // }
-   
 }
-

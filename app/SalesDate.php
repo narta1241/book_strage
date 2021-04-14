@@ -1,19 +1,19 @@
 <?php
         $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
         dd($Owned_book);
-        $serieslist = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
-        // dump($serieslist);
+        $seriesList = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
+        // dump($seriesList);
         $today = date('Y/m/d');
         $today = new DateTime($today);
         // dump($today);
-        foreach($serieslist as $series){
+        foreach($seriesList as $series){
             $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
             // dump($salesDay);
             if($salesDay){
                 $salesDay =new Datetime($salesDay);
             }
             if(!$salesDay || $salesDay < $today){
-                
+
                 // dump($salesDay);
                 $series->salesDate = BookSearch::saleDaySearch($series->title);
                 // dd($series->salesDate);
@@ -25,7 +25,7 @@
                     $series->save();
                 }
             }
-            
+
         }
         return redirect()->route('user.index');
 ?>

@@ -114,12 +114,12 @@ return [
     */
 
     'attributes' => [
-        'title' => '書籍名',    
-        'id' => '作品名',    
-        'current_volume' => '最新巻数',    
-        'volume' => '巻数',    
-        'comment' => 'コメント',    
-        'star' => '評価',    
+        'title' => '書籍名',
+        'id' => '作品名',
+        'current_volume' => '最新巻数',
+        'volume' => '巻数',
+        'comment' => 'コメント',
+        'star' => '評価',
     ],
 
 ];

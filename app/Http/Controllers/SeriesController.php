@@ -8,7 +8,6 @@ use App\BookSearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class SeriesController extends Controller
 {
     /**
@@ -19,17 +18,13 @@ class SeriesController extends Controller
     public function index()
     {
         $user = User::where('id', Auth::id())->first();
-        // dd($user);
-        if (!empty($_GET['search'])){
-            $serieslist = Series::where('title', 'like', "%{$_GET['search']}%")->orderBy('created_at','desc')->paginate(10);
-        }else{
-            $serieslist = Series::orderBy('created_at','desc')->paginate(10);
+
+        if (!empty($_GET['search'])) {
+            $seriesList = Series::where('title', 'like', "%{$_GET['search']}%")->orderBy('created_at', 'desc')->paginate(10);
+        } else {
+            $seriesList = Series::orderBy('created_at', 'desc')->paginate(10);
         }
-        // $posts = Series::paginate(10);
-        // dd($posts);
-        // logger()->info('Something happends');
-        return view('series.index', compact('serieslist', 'user'));
-        // return view('series.index', ['search'=>$search], compact('serieslist', 'user', 'search'));
+        return view('series.index', compact('seriesList', 'user'));
     }
 
     /**
@@ -40,7 +35,6 @@ class SeriesController extends Controller
     public function create($id)
     {
         $series = BookSearch::bookSearch($id);
-        // dd($series);
         return view('series.create', compact('series'));
     }
 
@@ -52,24 +46,22 @@ class SeriesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         //タイトルの中にある巻数の削除
         $title = $request->input('title');
         $cut = 0;
-        if(strpos($title, '（')){
+        if (strpos($title, '（')) {
             $cut = mb_strlen($title) - mb_strpos($title, '（');
-        }else{
-            $cut = 1;   
+        } else {
+            $cut = 1;
         }
-        // dump($cut);
-        $title = mb_substr( $title, 0 , mb_strlen($title)-$cut);
-        
-        $validator = $request->validate([       // <-- ここがバリデーション部分
+
+        $title = mb_substr($title, 0, mb_strlen($title) - $cut);
+
+        $request->validate([       // <-- ここがバリデーション部分
             'title' => "required|unique:series,title,$request->title",
             'current_volume' => 'required',
         ]);
-        // dump($request->input('title'));
-        // dd($title);
+
         Series::create([
             'user_id' => Auth::id(),
             'title' => $title,
@@ -79,7 +71,7 @@ class SeriesController extends Controller
             'current_volume' => $request->input('current_volume'),
             'final_flg' => $request->input('final_flg')
         ]);
-        
+
         return redirect()->route('series.index');
     }
 
@@ -91,7 +83,6 @@ class SeriesController extends Controller
      */
     public function show(Request $request)
     {
-        dd($request);
     }
 
     /**
@@ -114,10 +105,11 @@ class SeriesController extends Controller
      */
     public function update(Request $request, Series $series)
     {
-        $validator = $request->validate([       // <-- ここがバリデーション部分
+        $request->validate([       // <-- ここがバリデーション部分
             'title' => 'required',
             'current_volume' => 'required',
         ]);
+
         $series->title = $request->input('title');
         $series->author = $request->input('author');
         $series->publisher = $request->input('publisher');
@@ -125,7 +117,7 @@ class SeriesController extends Controller
         $series->current_volume = $request->input('current_volume');
         $series->final_flg = $request->input('final_flg');
         $series->save();
-        
+
         return redirect()->route('series.index');
     }
 
@@ -138,9 +130,7 @@ class SeriesController extends Controller
     public function destroy(Series $series)
     {
         $series->delete();
-        
+
         return redirect()->route('series.index');
     }
-    
-    
 }

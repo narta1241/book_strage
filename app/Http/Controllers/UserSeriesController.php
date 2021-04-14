@@ -7,7 +7,6 @@ use App\UserSeries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class UserSeriesController extends Controller
 {
     /**
@@ -38,23 +37,20 @@ class UserSeriesController extends Controller
      */
     public function store(Series $series, Request $request)
     {
-        // dump($request);
         $maxV = Series::where('id', $series->id)->value('current_volume');
-        // dd($maxV);
-         $validator = $request->validate([      
+        $request->validate([
             'volume' => "required|numeric|max:$maxV",
         ]);
-        
-        // dd($validator);
+
         UserSeries::create([
             'user_id' => Auth::id(),
             'series_id' => $series->id,
             'volume' => $request->input('volume'),
         ]);
-        
+
         return redirect()->route('series.index');
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -75,15 +71,13 @@ class UserSeriesController extends Controller
      */
     public function edit(Series $series)
     {
-        // dump($series);
         $volume = UserSeries::where('series_id', $series->id)->where('user_id', Auth::id())->value('volume');
-        // dd($volume);
         if (!$volume) {
             session()->flash('flash_message', '登録ユーザーではないので編集できません。');
             return redirect()->route('series.index');
         }
-        
-        return view('users_series.edit', compact('series','volume'));
+
+        return view('users_series.edit', compact('series', 'volume'));
     }
 
     /**
@@ -95,17 +89,17 @@ class UserSeriesController extends Controller
      */
     public function update(Request $request, $series)
     {
-        // dump($request);
+
         $maxV = Series::where('id', $series)->value('current_volume');
-        // dd($maxV);
-         $validator = $request->validate([      
+
+        $request->validate([
             'volume' => "required|numeric|max:$maxV",
         ]);
         $userSeries = UserSeries::where('series_id', $series)->where('user_id', Auth::id())->first();
-        // dd($validator);
+
         $userSeries->volume = $request->input('volume');
         $userSeries->save();
-        
+
         return redirect()->route('series.index');
     }
 
@@ -117,9 +111,7 @@ class UserSeriesController extends Controller
      */
     public function destroy($userSeries)
     {
-        // dump($userSeries);
-        $result = UserSeries::where('series_id', $userSeries)->where('user_id',Auth::id())->first();
-        // dd($result);
+        $result = UserSeries::where('series_id', $userSeries)->where('user_id', Auth::id())->first();
         $result->delete();
         return redirect()->route('series.index');
     }

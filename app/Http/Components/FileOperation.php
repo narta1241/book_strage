@@ -45,7 +45,6 @@ class FileOperation
         $series->salesDate = $day;
         $series->save();
     }
-   
     public function getBookSearch($title, $author)
     {
         // dd($keyword);
@@ -68,9 +67,8 @@ class FileOperation
                 'hits' => '1',
             // 'keyword' => $keyword,
         ));
-
             }
-            if ($response->isOk()) {
+        if ($response->isOk()) {
             foreach ($response as $item){
                 $saleslist = $item['salesDate'];
             }
