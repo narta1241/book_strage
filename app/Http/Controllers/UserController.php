@@ -20,6 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        //ユーザー情報取得
         $user = User::where('id', Auth::id())->first();
         $ownedBook = UserSeries::where('user_id', $user->id)->pluck('series_id');
         $seriesList = Series::whereIn('id', $ownedBook)->orderBy('created_at','desc')->paginate(10);
@@ -31,6 +32,9 @@ class UserController extends Controller
         $monthBooks = Series::whereIn('id', $ownedBook)->whereNotIn ('salesDate',[""])->orderBy('salesDate','asc')->get();
 
         $m = isset($_GET['m'])? htmlspecialchars($_GET['m'], ENT_QUOTES, 'utf-8') : '';
+        if(!$m){
+            $m =  date('n');
+        }
         $y = isset($_GET['y'])? htmlspecialchars($_GET['y'], ENT_QUOTES, 'utf-8') : '';
         if ($m!=''||$y!='') {
             $dt = Carbon::createFromDate($y,$m,01);

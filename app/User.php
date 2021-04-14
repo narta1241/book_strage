@@ -50,7 +50,10 @@ class User extends Authenticatable
     {
         return $this->hasmany('App\SeriesReview');
     }
-
+    public function favorite_series()
+    {
+        return $this->hasmany('App\Favorite_Series');
+    }
     public function countVolume()
     {
         $num = $this->user_series()->where('user_id', Auth::id())->count();
@@ -71,37 +74,16 @@ class User extends Authenticatable
 
         return $num;
     }
-
+    public function favoriteCount()
+    {
+        $num = $this->favorite_series()->where('user_id', Auth::id())->count();
+        
+        return $num;
+    }
     public function checkuser($series)
     {
         $user = $this->user_series()->where('user_id', Auth::id())->where('series_id', $series)->first();
 
         return $user;
     }
-
-    public static function getSalesDate()
-    {
-        $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
-        $seriesList = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at', 'desc')->get();
-
-        $today = date('Y/m/d');
-        $today = new DateTime($today);
-
-        foreach ($seriesList as $series) {
-            $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-            if ($salesDay) {
-                $salesDay = new Datetime($salesDay);
-            }
-
-            if (!$salesDay || $salesDay < $today) {
-                $series->salesDate = BookSearch::saleDaySearch($series->title);
-                $newSalesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-                $newSalesDay = new Datetime($newSalesDay);
-                if ($newSalesDay > $today) {
-                    $series->save();
-                }
-            }
-        }
-    }
-   
 }

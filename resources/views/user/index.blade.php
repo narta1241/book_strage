@@ -63,6 +63,10 @@
                         <th>レビュー数</th>
                         <td class="text-center">{{ $user->reviewCount() }}</td>
                       </tr>
+                      <tr>
+                        <th>お気に入り書籍数</th>
+                        <td class="text-center">{{ $user->favoriteCount() }}</td>
+                      </tr>
                     </table>
                     <div class="card">
                         <div class="card-body">
@@ -81,6 +85,7 @@
                                             </tr>
                                         </thead>
                                     @foreach($monthBooks as $day)
+                                       
                                         @if($m == $day->conversion($day->salesDate))
                                         <tr>
                                             <td class = "align-middle">{{ $day->title }}</td>
