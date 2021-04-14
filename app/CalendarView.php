@@ -22,8 +22,11 @@ class CalendarView extends Model
         $style ="";//CSS 色
         $styleBG ="";//CSS　背景色
         // $display ="";//js 発売日表示
+        $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
+        $salesDays = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->wherenotNULL('salesDate')->orderBy('created_at','desc')->pluck('salesDate');
         
-        $salesDays =Series::wherenotNull('salesDate')->pluck('salesDate');
+        // $salesDays =Series::where('user_id', Auth::id())->get();
+        // dd($salesDays);
         $regularDays = [];
         // dd($salesDays);
         foreach($salesDays as $salesDay){

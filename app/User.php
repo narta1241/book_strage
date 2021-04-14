@@ -49,6 +49,10 @@ class User extends Authenticatable
     {
         return $this->hasmany('App\Series_Review');
     }
+    public function favorite_series()
+    {
+        return $this->hasmany('App\Favorite_Series');
+    }
     public function countVolume()
     {
         $num = $this->user_series()->where('user_id', Auth::id())->count();
@@ -70,6 +74,12 @@ class User extends Authenticatable
         // dd($num);
         return $num;
     }
+    public function favoriteCount()
+    {
+        $num = $this->favorite_series()->where('user_id', Auth::id())->count();
+        
+        return $num;
+    }
     
     public function checkuser($series)
     {
@@ -78,38 +88,41 @@ class User extends Authenticatable
         // dd($user);
         return $user;
     }
-     public static function getSalesDate()
-    {
-        $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
-        //  dd($Owned_book);
-        $serieslist = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
-        // dump($serieslist);
-        $today = date('Y/m/d');
-        $today = new DateTime($today);
-        // dump($today);
-        foreach($serieslist as $series){
-            $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-            // dump($salesDay);
-            if($salesDay){
-                $salesDay =new Datetime($salesDay);
-            }
-            if(!$salesDay || $salesDay < $today){
+    //  public static function getSalesDate()
+    // {
+    //     $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
+    //     //  dd($Owned_book);
+    //     $serieslist = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
+    //     // dump($serieslist);
+    //     $today = date('Y/m/d');
+    //     $today = new DateTime($today);
+    //     // dump($today);
+    //     foreach($serieslist as $series){
+    //         $salesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
+    //         // dump($salesDay);
+    //         if($salesDay){
+    //             $salesDay =new DateTime($salesDay);
+    //         }
+    //         if(!$salesDay || $salesDay < $today){
                 
-                // dump($salesDay);
-                $series->salesDate = BookSearch::saleDaySearch($series->title);
-                // dd($series->salesDate);
-                $newSalesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
-                $newSalesDay = new Datetime($newSalesDay);
-            // dump($salesDay);
-                if($newSalesDay>$today){
-                    // dd($newSalesDay);
-                    $series->save();
-                }
-            }
+    //             // dump($salesDay);
+    //             $search = app()->make('App\Http\Controllers\SampleController');
+    //             $data   = $search->queuesBookSearch($series->title);
+    //             // $series->salesDate = BookSearch::saleDaySearch($series->title);
+    //             // dd($data);
+    //             // $newSalesDay = preg_replace('/[^0-9]/', '', $data);
+    //             // $newSalesDay = preg_replace('/[^0-9]/', '', $series->salesDate);
+    //             $newSalesDay = new DateTime($data);
+    //         dump($today);
+    //             if($newSalesDay>$today){
+    //                 dd($newSalesDay);
+    //                 $series->save();
+    //             }
+    //         }
             
-        }
+    //     }
             // dd($seriesDate);
-    }
+    // }
    
 }
 

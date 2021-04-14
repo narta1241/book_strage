@@ -21,22 +21,23 @@ class UserController extends Controller
      */
     public function index()
     {
+        //ユーザー情報取得
         $user = User::where('id', Auth::id())->first();
+        //ユーザー所持書籍取得
         $Owned_book = UserSeries::where('user_id', $user->id)->pluck('series_id');
-        // dump($Owned_book);
+        //ユーザー所持シリーズ取得
         $serieslist = Series::whereIn('id', $Owned_book)->orderBy('created_at','desc')->paginate(10);
-        //次巻発売日を検索
-        if($Owned_book){
+        
+        //次巻発売日を検索(非同期)
             $search = app()->make('App\Http\Controllers\SampleController');
-            $data   = $search->queuesSalesDate();
-        }
-            // dd($data);
-            // User::getSalesDate();
-            
-            // return redirect()->route('sample_queues');
+            $data   = $search->queuesBookSearch();
+        //今月発売の書籍取得
         $monthBooks = Series::whereIn('id', $Owned_book)->whereNotIn ('salesDate',[""])->orderBy('salesDate','asc')->get();
-        // dd($monthBooks);
+        //カレンダー作成
         $m = isset($_GET['m'])? htmlspecialchars($_GET['m'], ENT_QUOTES, 'utf-8') : '';
+        if(!$m){
+            $m =  date('n');
+        }
         $y = isset($_GET['y'])? htmlspecialchars($_GET['y'], ENT_QUOTES, 'utf-8') : '';
         if($m!=''||$y!=''){ 
             $dt = Carbon::createFromDate($y,$m,01);
@@ -44,7 +45,7 @@ class UserController extends Controller
             $dt = Carbon::createFromDate();
            }
         $dt = CalendarView::renderCalendar($dt);
-        // dd($calendar);
+        
         return view('user.index', compact('serieslist', 'user', 'dt', 'monthBooks', 'm'));
     }
 
