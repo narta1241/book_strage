@@ -46,13 +46,14 @@ class SeriesController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         //タイトルの中にある巻数の削除
         $title = $request->input('title');
         $cut = 0;
         if (strpos($title, '（')) {
             $cut = mb_strlen($title) - mb_strpos($title, '（');
         } else {
-            $cut = 1;
+            $cut = 0;
         }
 
         $title = mb_substr($title, 0, mb_strlen($title) - $cut);
