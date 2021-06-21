@@ -52,7 +52,7 @@ class User extends Authenticatable
     }
     public function favorite_series()
     {
-        return $this->hasmany('App\Favorite_Series');
+        return $this->hasmany('App\FavoriteSeries');
     }
     public function countVolume()
     {

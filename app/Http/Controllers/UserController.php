@@ -25,7 +25,7 @@ class UserController extends Controller
         $ownedBook = UserSeries::where('user_id', $user->id)->pluck('series_id');
         $seriesList = Series::whereIn('id', $ownedBook)->orderBy('created_at','desc')->paginate(10);
         // 次巻発売日を検索
-        if ($ownedBook) {
+        if ($seriesList) {
             $search = app()->make('App\Http\Controllers\SampleController');
             $data   = $search->queuesSalesDate();
         }

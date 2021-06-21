@@ -35,3 +35,8 @@
 /*.align-middle:hover{*/
 /*    color:#000;*/
 /*}*/
+#sort_table table::after { 
+	content: '▼';
+	font-size: 12px;
+	margin-left: 5px;
+}

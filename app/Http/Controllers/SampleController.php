@@ -30,22 +30,23 @@ class SampleController extends Controller
 
     //     return view('sample_queues', ['start' => $start]);
     // }
-    
-    public function queuesBookSearch()
+    public function queuesSalesDate()
     {
         $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
         // dump($Owned_book);
-        $serieslist = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
+        $seriesList = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
+        date_default_timezone_set('Asia/Tokyo');
         // dd($serieslist);
         $today = date('Y/m/d');
-        // dump($today);
+        // dd($today);
         $today = new DateTime($today);
         // dd($series);
         
-        $file = $this->fp->makeTextFile();
-        GenerateTextFile::dispatch($file,$serieslist,$today);
+        // $file = $this->fp->makeTextFile();
+        GenerateTextFile::dispatch($seriesList,$today);
 
         // dd($ans);//ここでddをすると日付の情報がない
         // return $ans;
     }
+    
 }

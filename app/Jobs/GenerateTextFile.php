@@ -26,9 +26,9 @@ class GenerateTextFile implements ShouldQueue
     private $fp;
     private $today;
 
-    public function __construct($file,$serieslist,$today)
+    public function __construct($serieslist,$today)
     {
-        $this->file = $file;
+        // $this->file = $file;
         // $this->max  = $max;
         $this->series  = $serieslist;
         $this->today = $today;
@@ -58,7 +58,7 @@ class GenerateTextFile implements ShouldQueue
                 //エラー回避
                 sleep(1);
                 
-                $this->fp->write($this->file, $newSalesDay);
+                // $this->fp->write($this->file, $newSalesDay);
                 
                 $newSalesDay = $this->fp->changeDay($newSalesDay);
           

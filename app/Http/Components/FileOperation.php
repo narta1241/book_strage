@@ -15,13 +15,13 @@ class FileOperation
      * テキストファイルを作成する
      * @return string
      */
-    public function makeTextFile()
-    {
-        $file = sprintf('%s/test.txt', storage_path('texts'));
-        if(file_exists($file)) unlink($file);
-        touch($file);
-        return $file;
-    }
+    // public function makeTextFile()
+    // {
+    //     $file = sprintf('%s/test.txt', storage_path('texts'));
+    //     if(file_exists($file)) unlink($file);
+    //     touch($file);
+    //     return $file;
+    // }
 
     /**
      * ファイルに指定回数分の追加書き込みを行う

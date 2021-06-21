@@ -21,6 +21,7 @@ class CalendarView extends Model
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $style = "";//CSS 色
         $styleBG = "";//CSS　背景色
+        $BG = "";//CSS　背景
         // $display ="";//js 発売日表示
         $Owned_book = UserSeries::where('user_id', Auth::id())->pluck('series_id');
         $salesDays = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->wherenotNULL('salesDate')->orderBy('created_at','desc')->pluck('salesDate');
@@ -92,21 +93,25 @@ class CalendarView extends Model
             }
             $today = date('Y-m-d');
             if ($dt->format('Y-m-d') == $today) {
-                $styleBG = 'silver';
+                $styleBG = '#ccc';
             }
             if (in_array($dt->format('Y-m-d'), $regularDays)) {
                 $styleBG = "#0f3"; // 発売日だったら背景色を黄緑
             }
-                $calendar .= "<td class='day' style =\"color:" . $style . "; background-color:" . $styleBG . " ;\">" . $dt->day . '</td>';
-
+            if ($dt->format('Y-m-d') == $today && in_array($dt->format('Y-m-d'), $regularDays)) {
+                $BG = 'linear-gradient(135deg, #ccc 0%, #ccc 50%, #0f3 50%, #0f3 100%)';// 発売日が今日だったら混色
+            }
+            $calendar .= "<td class='day' style =\"color:" . $style . "; background-color:" . $styleBG . "; background:" . $BG . ";\">" . $dt->day . '</td>';
             $dt->addDay();
             $style = "";
             $styleBG = "";
+            $BG = "";
         }
 
         $calendar .= '</tr></tbody>';
         $calendar .= '</table></div>';
 
+// dd($calendar);
         return $title.$calendar;
     }
 
