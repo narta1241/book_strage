@@ -57,10 +57,10 @@ class SeriesController extends Controller
 
         $title = mb_substr($title, 0, mb_strlen($title) - $cut);
 
-        // $request->validate([       // <-- ここがバリデーション部分
-        //     'title' => "required|unique:series,title,$request->title",
-        //     'current_volume' => 'required',
-        // ]);
+        $request->validate([       // <-- ここがバリデーション部分
+            'title' => "required|unique:series,title",
+            'current_volume' => 'required',
+        ]);
 
         Series::create([
             'user_id' => Auth::id(),
