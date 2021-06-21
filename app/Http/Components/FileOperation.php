@@ -48,6 +48,7 @@ class FileOperation
     public function getBookSearch($title, $author)
     {
         // dd($keyword);
+        $saleslist="";
         $client = new RakutenRws_Client();
          //定数化
         if (!defined('RAKUTEN_APPLICATION_ID')){
