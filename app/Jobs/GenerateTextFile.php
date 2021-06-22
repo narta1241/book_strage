@@ -53,7 +53,7 @@ class GenerateTextFile implements ShouldQueue
                 $salesDay = $this->fp->changeDay($salesDay); 
             }
             if(!$salesDay || $salesDay < $this->today){
-                $data = $this->fp->getBookSearch($series->title,$series->author);
+                $data = $this->fp->getBookSearch($series->title, $series->author);
                 $newSalesDay = preg_replace('/[^0-9]/', '', $data);
                 //エラー回避
                 sleep(1);
@@ -61,7 +61,7 @@ class GenerateTextFile implements ShouldQueue
                 // $this->fp->write($this->file, $newSalesDay);
                 
                 $newSalesDay = $this->fp->changeDay($newSalesDay);
-          
+                // dd($newSalesDay);
                 if($newSalesDay>$this->today){
                     $this->fp->save($data, $series->id);
                 }

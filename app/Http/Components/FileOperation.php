@@ -68,13 +68,14 @@ class FileOperation
                 'hits' => '1',
             // 'keyword' => $keyword,
         ));
+            
+            if ($response->isOk()) {
+                foreach ($response as $item){
+                    $saleslist = $item['salesDate'];
+                }
+             }else {
+                echo 'Error:'.$response->getMessage();
             }
-        if ($response->isOk()) {
-            foreach ($response as $item){
-                $saleslist = $item['salesDate'];
-            }
-         }else {
-            echo 'Error:'.$response->getMessage();
         }
         // $newSalesDay = preg_replace('/[^0-9]/', '', $saleslist);
         // $newSalesDay = new DateTime($newSalesDay);

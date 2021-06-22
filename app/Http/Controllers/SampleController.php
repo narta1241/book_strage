@@ -36,7 +36,7 @@ class SampleController extends Controller
         // dump($Owned_book);
         $seriesList = Series::whereIn('id', $Owned_book)->where('final_flg', 0)->orderBy('created_at','desc')->get();
         date_default_timezone_set('Asia/Tokyo');
-        // dd($serieslist);
+        // dd($seriesList);
         $today = date('Y/m/d');
         // dd($today);
         $today = new DateTime($today);
